@@ -1,2 +1,2 @@
-# EECS-447-Project
-EECS 447 Project
+# Library_Database_Management_Project
+Library_Database_Management_Project
