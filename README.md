@@ -10,7 +10,7 @@ Links:
 
 # Project Deliverables:
 - 01 Project Visions/Plan - **Currently in GitHub**
-- 02 Database Requirements
+- 02 Database Requirements - **Currently in GitHub**
 - 03  Conceptual Modeling
 - 04 Logical Relational Model
 - 05 Physical Design Database
