@@ -12,6 +12,7 @@ Links:
 - 01 Project Visions/Plan - **Currently in GitHub**
 - 02 Database Requirements - **Currently in GitHub**
 - 03  Conceptual Modeling - **Currently in GitHub along with ER Diagram PDF**
+  - [ER Model Diagram Link](https://www.canva.com/design/DAGfNoKDdxQ/rCk15p_UwD9PzpjvqQvGzw/view?utm_content=DAGfNoKDdxQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd09b5e71fc)
 - 04 Logical Relational Model
 - 05 Physical Design Database
 - 06 Project Demonstration
