@@ -12,9 +12,9 @@ Links:
 - 01 Project Visions/Plan - **Currently in GitHub**
 - 02 Database Requirements - **Currently in GitHub**
 - 03  Conceptual Modeling - **Currently in GitHub along with ER Diagram PDF**
-  - [ER Model Diagram Link]([https://www.canva.com/design/DAGfNoKDdxQ/rCk15p_UwD9PzpjvqQvGzw/view?utm_content=DAGfNoKDdxQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd09b5e71fc](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=ER%20Diagram&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1_KGkKMW-fyRr9aN6N-gbbnwTqDtz724K%26export%3Ddownload#%7B%22pageId%22%3A%22k7eG-Vjl01qzv2KogiVF%22%7D))
+  - [ER Model Diagram Link]([https://www.canva.com/design/DAGfNoKDdxQ/rCk15p_UwD9PzpjvqQvGzw/view?utm_content=DAGfNoKDdxQ&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd09b5e71fc](https://viewer.diagrams.net/tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=ER%20Diagram&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1_KGkKMW-fyRr9aN6N-gbbnwTqDtz724K%26export%3Ddownload#%7B%22pageId%22%3A%22k7eG-Vjl01qzv2KogiVF%22%7D))
 - 04 Logical Relational Model
-  - [Logical Relational Model Diagram Link]([https://www.canva.com/design/DAGiZyAZCHo/-nmO17_yifk6VNOG9Nr7Kw/view?utm_content=DAGiZyAZCHo&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd6e2bd8218](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Relational%20Schema%20Diagram&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1HizW8P6hBaWhd9nTs-7Okx-FbY9aNjA3%26export%3Ddownload#%7B%22pageId%22%3A%22k7eG-Vjl01qzv2KogiVF%22%7D))
+  - [Logical Relational Model Diagram Link]([https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Relational%20Schema%20Diagram&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1HizW8P6hBaWhd9nTs-7Okx-FbY9aNjA3%26export%3Ddownload#%7B%22pageId%22%3A%22k7eG-Vjl01qzv2KogiVF%22%7D])
 - 05 Physical Design Database
 - 06 Project Demonstration
 - 07 Glossary - **Currently in GitHub**
