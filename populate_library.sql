@@ -200,6 +200,12 @@ VALUES -- Books (1-100)
     (8, 0, 3, 0),
     (9, 1, 2, 1),
     (10, 0, 4, 0),
+    (11, 0, 5, 0),
+    (12, 0, 3, 0),
+    (13, 0, 2, 0),
+    (14, 0, 4, 0),
+    (15, 0, 5, 0),
+    (16, 0, 1, 0),
     -- Digital Media (101-150)
     (101, 0, 1, 0),
     (102, 1, 1, 0),
@@ -322,6 +328,66 @@ VALUES (
         '978-0684801469',
         'The Old Man and the Sea',
         1952
+    ),
+    (
+        11,
+        'J.K. Rowling',
+        1,
+        4.1,
+        'Fantasy',
+        '978-1338878950',
+        'Harry Potter and the Goblet of Fire',
+        2000
+    ),
+    (
+        12,
+        'J.K. Rowling',
+        1,
+        4.2,
+        'Fantasy',
+        '978-0439064866',
+        'Harry Potter and the Chamber of Secrets',
+        1998
+    ),
+    (
+        13,
+        'J.K. Rowling',
+        1,
+        4.3,
+        'Fantasy',
+        '978-0439136358',
+        'Harry Potter and the Prisoner of Azkaban',
+        1999
+    ),
+    (
+        14,
+        'J.K. Rowling',
+        1,
+        4.4,
+        'Fantasy',
+        '978-0439358064',
+        'Harry Potter and the Order of the Phoenix',
+        2003
+    ),
+    (
+        15,
+        'J.K. Rowling',
+        1,
+        4.5,
+        'Fantasy',
+        '978-0439784542',
+        'Harry Potter and the Half-Blood Prince',
+        2005
+    ),
+    (
+        16,
+        'J.K. Rowling',
+        1,
+        4.6,
+        'Fantasy',
+        '978-1338878981',
+        'Harry Potter and the Deathly Hallows',
+        2007
     );
 -- Digital_Media_Item ------------------------------------------------------
 INSERT INTO Digital_Media_Item (
@@ -531,7 +597,7 @@ VALUES -- Regular members (type_id=1)
         1,
         'Michael Brown',
         'michael.b@email.com',
-        'suspended'
+        'inactive'
     ),
     (
         31,
@@ -623,7 +689,7 @@ VALUES -- Regular members (type_id=1)
         3,
         'Richard White',
         'richard.w@email.com',
-        'suspended'
+        'inactive'
     ),
     (
         33,

@@ -1,0 +1,638 @@
+Account_View
++-----------+------------+------------+
+| member_id | account_id | timestamp  |
++-----------+------------+------------+
+|         1 |          1 | 2023-05-01 |
+|        11 |         11 | 2023-05-05 |
+|        21 |         21 | 2023-05-10 |
++-----------+------------+------------+
+3 rows in set (0.001 sec)
+
+Added
++---------+-------------+
+| copy_id | waitlist_id |
++---------+-------------+
+|       1 |           1 |
+|       6 |           2 | 
+|       9 |           3 |
++---------+-------------+
+3 rows in set (0.000 sec)
+
+Author
++-----------+--------------------------+
+| author_id | name                     |
++-----------+--------------------------+
+|         1 | J.K. Rowling             |
+|         2 | Stephen King             |
+|         3 | George R.R. Martin       |
+|         4 | Agatha Christie          |
+|         5 | J.R.R. Tolkien           |
+|         6 | Harper Lee               |
+|         7 | Dan Brown                |
+|         8 | Margaret Atwood          |
+|         9 | Neil Gaiman              |
+|        10 | Ernest Hemingway         |
+|        11 | Jane Austen              |
+|        12 | Charles Dickens          |
+|        13 | Mark Twain               |
+|        14 | Leo Tolstoy              |
+|        15 | F. Scott Fitzgerald      |
+|        16 | Virginia Woolf           |
+|        17 | Toni Morrison            |
+|        18 | Gabriel García Márquez   |
+|        19 | Chimamanda Ngozi Adichie |
+|        20 | Kazuo Ishiguro           |
+|        21 | Yuval Noah Harari        |
+|        22 | Michelle Obama           |
+|        23 | Malcolm Gladwell         |
+|        24 | Brene Brown              |
+|        25 | James Clear              |
+|        26 | Colleen Hoover           |
+|        27 | Taylor Jenkins Reid      |
+|        28 | John Grisham             |
+|        29 | Michael Connelly         |
+|        30 | David Baldacci           |
+|        31 | Nora Roberts             |
+|        32 | Danielle Steel           |
+|        33 | Nicholas Sparks          |
+|        34 | Brandon Sanderson        |
+|        35 | Patrick Rothfuss         |
+|        36 | Robin Hobb               |
+|        37 | Ursula K. Le Guin        |
+|        38 | Octavia Butler           |
+|        39 | Isaac Asimov             |
+|        40 | Arthur C. Clarke         |
+|        41 | Philip K. Dick           |
+|        42 | William Gibson           |
+|        43 | Andy Weir                |
+|        44 | Blake Crouch             |
+|        45 | R.F. Kuang               |
+|        46 | Leigh Bardugo            |
+|        47 | Sarah J. Maas            |
+|        48 | V.E. Schwab              |
+|        49 | Madeline Miller          |
+|        50 | Emily St. John Mandel    |
++-----------+--------------------------+
+50 rows in set (0.000 sec)
+
+Author_Write
++---------+-----------+
+| item_id | author_id |
++---------+-----------+
+|     151 |      NULL |
+|     152 |      NULL |
+|       1 |         1 |
+|       2 |         2 |
+|       3 |         3 |
+|     101 |        23 |
+|     102 |        25 |
++---------+-----------+
+7 rows in set (0.000 sec)
+
+Book
++---------+--------------------+---------------------+-------------+-----------------+----------------+------------------------------------------+------------------+
+| item_id | author             | availability_status | book_rating | genre           | ISBN           | title                                    | publication_year |
++---------+--------------------+---------------------+-------------+-----------------+----------------+------------------------------------------+------------------+
+|       1 | J.K. Rowling       |                   1 |        4.80 | Fantasy         | 978-0747532743 | Harry Potter and the Philosopher's Stone |             1997 |
+|       2 | Stephen King       |                   1 |        4.50 | Horror          | 978-0307743657 | The Shining                              |             1977 |
+|       3 | George R.R. Martin |                   1 |        4.70 | Fantasy         | 978-0553103540 | A Game of Thrones                        |             1996 |
+|       4 | Agatha Christie    |                   1 |        4.20 | Mystery         | 978-0062073501 | Murder on the Orient Express             |             1934 |
+|       5 | J.R.R. Tolkien     |                   1 |        4.90 | Fantasy         | 978-0618640157 | The Lord of the Rings                    |             1954 |
+|       6 | Harper Lee         |                   1 |        4.80 | Classic         | 978-0061120084 | To Kill a Mockingbird                    |             1960 |
+|       7 | Dan Brown          |                   1 |        3.90 | Thriller        | 978-0307474278 | The Da Vinci Code                        |             2003 |
+|       8 | Margaret Atwood    |                   1 |        4.30 | Science Fiction | 978-0385543781 | The Handmaid's Tale                      |             1985 |
+|       9 | Neil Gaiman        |                   1 |        4.20 | Fantasy         | 978-0062255655 | American Gods                            |             2001 |
+|      10 | Ernest Hemingway   |                   1 |        4.00 | Classic         | 978-0684801469 | The Old Man and the Sea                  |             1952 |
++---------+--------------------+---------------------+-------------+-----------------+----------------+------------------------------------------+------------------+
+10 rows in set (0.000 sec)
+
+Categorize
++---------+----------+
+| item_id | genre_id |
++---------+----------+
+|       1 |        1 |
+|       3 |        1 |
+|       2 |        2 |
+|     151 |        4 |
+|     152 |        6 |
+|     101 |       12 |
+|     102 |       13 |
++---------+----------+
+7 rows in set (0.000 sec)
+
+Consists_Of
++-------------------+---------+
+| recommendation_id | item_id |
++-------------------+---------+
+|                 1 |       1 |
+|                 1 |       3 |
+|                 1 |       5 |
+|                 2 |     101 |
+|                 2 |     102 |
+|                 3 |       6 |
+|                 3 |      10 |
++-------------------+---------+
+7 rows in set (0.000 sec)
+
+Copy
++---------+-------------+
+| copy_id | status      |
++---------+-------------+
+|       1 | in_stock    |
+|       2 | checked_out |
+|       3 | in_stock    |
+|       4 | checked_out |
+|       5 | in_stock    |
+|       6 | in_stock    |
+|       7 | checked_out |
+|       8 | in_stock    |
+|       9 | checked_out |
+|      10 | in_stock    |
+|     301 | in_stock    |
+|     302 | checked_out |
+|     303 | in_stock    |
+|     304 | in_stock    |
+|     305 | checked_out |
+|     401 | in_stock    |
+|     402 | checked_out |
+|     403 | in_stock    |
+|     404 | checked_out |
+|     405 | in_stock    |
++---------+-------------+
+20 rows in set (0.000 sec)
+
+Digital_Media_Item
++---------+-------------------+---------------------+------------+----------------+----------------------+------------------+
+| item_id | author            | availability_status | genre      | ISBN           | title                | publication_year |
++---------+-------------------+---------------------+------------+----------------+----------------------+------------------+
+|     101 | Malcolm Gladwell  |                   1 | Nonfiction | 978-0316017930 | Outliers             |             2008 |
+|     102 | James Clear       |                   1 | Self-Help  | 978-0735211292 | Atomic Habits        |             2018 |
+|     103 | Brene Brown       |                   1 | Self-Help  | 978-1592408412 | Daring Greatly       |             2012 |
+|     104 | Michelle Obama    |                   1 | Biography  | 978-0525633751 | Becoming (Audiobook) |             2018 |
+|     105 | Yuval Noah Harari |                   1 | Nonfiction | 978-0062316110 | Homo Deus (eBook)    |             2017 |
++---------+-------------------+---------------------+------------+----------------+----------------------+------------------+
+5 rows in set (0.000 sec)
+
+Fine
++---------+-------------+------------+-------------+
+| fine_id | fine_amount | fine_date  | fine_status |
++---------+-------------+------------+-------------+
+|       1 |        2.50 | 2023-04-06 | paid        |
+|       2 |        5.00 | 2023-04-20 | paid        |
+|       3 |        1.50 | 2023-03-30 | paid        |
+|       4 |        3.75 | 2023-05-01 | unpaid      |
+|       5 |        6.25 | 2023-05-05 | unpaid      |
+|       6 |        2.00 | 2023-05-10 | unpaid      |
+|       7 |        4.50 | 2023-01-15 | paid        |
+|       8 |        3.00 | 2023-01-20 | paid        |
+|       9 |        5.50 | 2023-02-10 | paid        |
+|      10 |        2.25 | 2023-03-05 | paid        |
+|      11 |        1.75 | 2023-03-10 | paid        |
+|      12 |        3.50 | 2023-03-15 | paid        |
+|      13 |        4.00 | 2023-04-01 | paid        |
+|      14 |        2.50 | 2023-04-05 | paid        |
+|      15 |        5.75 | 2023-04-10 | paid        |
++---------+-------------+------------+-------------+
+15 rows in set (0.000 sec)
+
+Generate
++-----------+----------+
+| report_id | staff_id |
++-----------+----------+
+|         1 |        1 |
+|         2 |        1 |
+|         3 |        1 |
+|         4 |        1 |
+|         5 |        1 |
++-----------+----------+
+5 rows in set (0.000 sec)
+
+Genre
++----------+--------------------+
+| genre_id | genre_name         |
++----------+--------------------+
+|        1 | Fantasy            |
+|        2 | Horror             |
+|        3 | Mystery            |
+|        4 | Science Fiction    |
+|        5 | Romance            |
+|        6 | Thriller           |
+|        7 | Historical Fiction |
+|        8 | Biography          |
+|        9 | Young Adult        |
+|       10 | Classic            |
+|       11 | Literary Fiction   |
+|       12 | Nonfiction         |
+|       13 | Self-Help          |
+|       14 | True Crime         |
+|       15 | Poetry             |
++----------+--------------------+
+15 rows in set (0.000 sec)
+
+Give
++-------------------+-----------+
+| recommendation_id | member_id |
++-------------------+-----------+
+|                 1 |         1 |
+|                 2 |        11 |
+|                 3 |        21 |
++-------------------+-----------+
+3 rows in set (0.000 sec)
+
+Hold
++-----------+---------+
+| member_id | copy_id |
++-----------+---------+
+|         1 |       4 |
+|        11 |       7 |
+|        21 |      10 |
++-----------+---------+
+3 rows in set (0.000 sec)
+
+Incur
++----------------+---------+
+| transaction_id | fine_id |
++----------------+---------+
+|             13 |       7 |
+|             14 |       8 |
+|             19 |       1 |
+|             20 |       2 |
+|             21 |       3 |
++----------------+---------+
+5 rows in set (0.000 sec)
+
+Item_Update
++---------+----------+
+| copy_id | staff_id |
++---------+----------+
+|       1 |        4 |
+|       2 |        5 |
+|       3 |        8 |
++---------+----------+
+3 rows in set (0.000 sec)
+
+Library_Item
++---------+--------------------+-------------------+----------------+
+| item_id | checked_out_status | current_inventory | overdue_status |
++---------+--------------------+-------------------+----------------+
+|       1 |                  0 |                 5 |              0 |
+|       2 |                  1 |                 3 |              0 |
+|       3 |                  0 |                 2 |              0 |
+|       4 |                  1 |                 4 |              1 |
+|       5 |                  0 |                 3 |              0 |
+|       6 |                  0 |                 1 |              0 |
+|       7 |                  1 |                 2 |              0 |
+|       8 |                  0 |                 3 |              0 |
+|       9 |                  1 |                 2 |              1 |
+|      10 |                  0 |                 4 |              0 |
+|     101 |                  0 |                 1 |              0 |
+|     102 |                  1 |                 1 |              0 |
+|     103 |                  0 |                 1 |              0 |
+|     104 |                  0 |                 1 |              0 |
+|     105 |                  1 |                 1 |              0 |
+|     151 |                  0 |                 5 |              0 |
+|     152 |                  1 |                 3 |              0 |
+|     153 |                  0 |                 2 |              0 |
+|     154 |                  1 |                 4 |              0 |
+|     155 |                  0 |                 3 |              0 |
++---------+--------------------+-------------------+----------------+
+20 rows in set (0.000 sec)
+
+Library_Member
++-----------+------------+----------+---------+-----------------+-------------------------+----------------+
+| member_id | book_limit | fee_type | type_id | name            | contact_information     | account_status |
++-----------+------------+----------+---------+-----------------+-------------------------+----------------+
+|         1 |          5 |     0.30 |       1 | John Smith      | john.smith@email.com    | active         |
+|         2 |          5 |     0.30 |       1 | Sarah Johnson   | sarah.j@email.com       | active         |
+|         3 |          5 |     0.30 |       1 | Michael Brown   | michael.b@email.com     | suspended      |
+|        11 |         10 |     0.20 |       2 | Emily Davis     | emily.d@university.edu  | active         |
+|        12 |         10 |     0.20 |       2 | David Wilson    | david.w@university.edu  | active         |
+|        13 |         10 |     0.20 |       2 | Jessica Lee     | jessica.l@college.edu   | active         |
+|        21 |          5 |     0.15 |       3 | Robert Taylor   | robert.t@email.com      | active         |
+|        22 |          5 |     0.15 |       3 | Margaret Clark  | margaret.c@email.com    | active         |
+|        23 |          5 |     0.15 |       3 | Richard White   | richard.w@email.com     | suspended      |
+|        31 |          5 |     0.30 |       1 | Jennifer Adams  | jennifer.a@email.com    | active         |
+|        32 |         10 |     0.20 |       2 | Daniel Martin   | daniel.m@university.edu | active         |
+|        33 |          5 |     0.15 |       3 | Patricia Hall   | patricia.h@email.com    | active         |
+|        34 |          5 |     0.30 |       1 | Thomas Young    | thomas.y@email.com      | active         |
+|        35 |         10 |     0.20 |       2 | Elizabeth Scott | elizabeth.s@college.edu | active         |
+|        36 |          5 |     0.15 |       3 | Charles Allen   | charles.a@email.com     | active         |
++-----------+------------+----------+---------+-----------------+-------------------------+----------------+
+15 rows in set (0.000 sec)
+
+Library_Report
++-----------+---------------------+-------------+---------------------------+---------------------------+
+| report_id | number_of_checkouts | report_date | total_amount_owed_per_day | total_amount_paid_per_day |
++-----------+---------------------+-------------+---------------------------+---------------------------+
+|         1 |                  85 | 2023-01-31  |                     12.50 |                     10.00 |
+|         2 |                  92 | 2023-02-28  |                     15.75 |                     12.50 |
+|         3 |                 105 | 2023-03-31  |                     18.25 |                     15.00 |
+|         4 |                  88 | 2023-04-30  |                     10.50 |                      8.75 |
+|         5 |                  76 | 2023-05-31  |                      9.25 |                      7.50 |
++-----------+---------------------+-------------+---------------------------+---------------------------+
+5 rows in set (0.000 sec)
+
+Library_Transaction
++----------------+------------------+------------+-------------+
+| transaction_id | checked_out_date | due_date   | return_date |
++----------------+------------------+------------+-------------+
+|              1 | 2023-05-01       | 2023-05-15 | NULL        |
+|              2 | 2023-05-02       | 2023-05-16 | NULL        |
+|              3 | 2023-05-03       | 2023-05-17 | NULL        |
+|              4 | 2023-04-15       | 2023-04-29 | 2023-04-28  |
+|              5 | 2023-04-16       | 2023-04-30 | 2023-04-29  |
+|              6 | 2023-04-17       | 2023-05-01 | 2023-04-30  |
+|              7 | 2023-04-10       | 2023-04-24 | NULL        |
+|              8 | 2023-04-11       | 2023-04-25 | NULL        |
+|              9 | 2023-04-12       | 2023-04-26 | NULL        |
+|             10 | 2023-01-05       | 2023-01-19 | 2023-01-18  |
+|             11 | 2023-01-10       | 2023-01-24 | 2023-01-23  |
+|             12 | 2023-01-15       | 2023-01-29 | 2023-01-28  |
+|             13 | 2023-02-01       | 2023-02-15 | 2023-02-14  |
+|             14 | 2023-02-05       | 2023-02-19 | 2023-02-18  |
+|             15 | 2023-02-10       | 2023-02-24 | 2023-02-23  |
+|             16 | 2023-03-01       | 2023-03-15 | 2023-03-14  |
+|             17 | 2023-03-05       | 2023-03-19 | 2023-03-18  |
+|             18 | 2023-03-10       | 2023-03-24 | 2023-03-23  |
+|             19 | 2023-03-15       | 2023-03-29 | 2023-04-02  |
+|             20 | 2023-03-20       | 2023-04-03 | 2023-04-05  |
+|             21 | 2023-03-25       | 2023-04-08 | 2023-04-10  |
+|             22 | 2023-04-01       | 2023-04-15 | 2023-04-14  |
+|             23 | 2023-04-02       | 2023-04-16 | 2023-04-15  |
+|             24 | 2023-04-03       | 2023-04-17 | 2023-04-16  |
+|             25 | 2023-04-05       | 2023-04-19 | 2023-04-18  |
+|             26 | 2023-04-06       | 2023-04-20 | 2023-04-19  |
+|             27 | 2023-04-07       | 2023-04-21 | 2023-04-20  |
+|             28 | 2023-05-05       | 2023-05-19 | NULL        |
+|             29 | 2023-05-05       | 2023-05-19 | NULL        |
+|             30 | 2023-05-06       | 2023-05-20 | NULL        |
++----------------+------------------+------------+-------------+
+30 rows in set (0.000 sec)
+
+Loan
++---------+----------------+
+| copy_id | transaction_id |
++---------+----------------+
+|       2 |              1 |
+|       4 |              2 |
+|       7 |              3 |
+|       9 |              4 |
+|      10 |              5 |
++---------+----------------+
+5 rows in set (0.000 sec)
+
+Magazine
++---------+-----------------------------+---------------------+----------+-----------+--------------+---------------------+------------------+
+| item_id | author                      | availability_status | genre    | ISSN      | issue_number | title               | publication_date |
++---------+-----------------------------+---------------------+----------+-----------+--------------+---------------------+------------------+
+|     151 | National Geographic Society | 1                   | Science  | 0027-9358 |          245 | National Geographic | 2023-05-01       |
+|     152 | Time USA                    | 1                   | News     | 0040-781X |          195 | Time                | 2023-04-15       |
+|     153 | The Economist Group         | 1                   | Business | 0013-0613 |         9012 | The Economist       | 2023-04-29       |
+|     154 | Conde Nast                  | 1                   | Fashion  | 0032-8061 |          825 | Vogue               | 2023-05-10       |
+|     155 | Hearst Communications       | 1                   | Health   | 0028-6583 |          102 | Good Housekeeping   | 2023-05-05       |
++---------+-----------------------------+---------------------+----------+-----------+--------------+---------------------+------------------+
+5 rows in set (0.000 sec)
+
+Make
++----------------+-----------+
+| transaction_id | member_id |
++----------------+-----------+
+|              1 |         1 |
+|              4 |         2 |
+|              2 |        11 |
+|              5 |        12 |
+|              3 |        21 |
++----------------+-----------+
+5 rows in set (0.000 sec)
+
+Member_Account
++------------+---------------+-----------------+-------------------+
+| account_id | incurred_fees | overdue_balance | total_amount_paid |
++------------+---------------+-----------------+-------------------+
+|          1 |          5.50 |            2.00 |             15.00 |
+|          2 |          3.00 |            0.00 |              8.50 |
+|          3 |         10.00 |           10.00 |              0.00 |
+|         11 |          2.50 |            0.00 |              5.00 |
+|         12 |          0.00 |            0.00 |              2.50 |
+|         13 |          1.50 |            1.50 |              3.00 |
+|         21 |          0.00 |            0.00 |              0.00 |
+|         22 |          3.50 |            0.00 |              7.00 |
+|         23 |          5.00 |            5.00 |              0.00 |
+|         31 |          2.00 |            0.00 |              4.00 |
+|         32 |          1.25 |            0.00 |              2.50 |
+|         33 |          0.00 |            0.00 |              0.00 |
+|         34 |          3.75 |            3.75 |              0.00 |
+|         35 |          2.50 |            0.00 |              5.00 |
+|         36 |          1.00 |            0.00 |              2.00 |
++------------+---------------+-----------------+-------------------+
+15 rows in set (0.000 sec)
+
+Originate
++---------+---------+
+| copy_id | item_id |
++---------+---------+
+|       1 |       1 |
+|       2 |       1 |
+|       3 |       1 |
+|       4 |       1 |
+|       5 |       1 |
+|       6 |       2 |
+|       7 |       2 |
+|       8 |       2 |
+|       9 |       3 |
+|      10 |       3 |
+|     301 |     101 |
+|     302 |     102 |
+|     401 |     151 |
+|     402 |     151 |
+|     403 |     151 |
+|     404 |     151 |
+|     405 |     151 |
++---------+---------+
+17 rows in set (0.000 sec)
+
+Oversee
++-----------+----------+
+| member_id | staff_id |
++-----------+----------+
+|         1 |        1 |
+|        11 |        2 |
+|        21 |        3 |
+|         2 |        6 |
+|        12 |        7 |
++-----------+----------+
+5 rows in set (0.000 sec)
+
+Pay
++---------+-----------+-------------+------------+
+| fine_id | member_id | amount_paid | paid_date  |
++---------+-----------+-------------+------------+
+|       1 |         1 |        2.50 | 2023-04-06 |
+|       2 |        11 |        5.00 | 2023-04-20 |
+|       3 |        21 |        1.50 | 2023-03-30 |
+|       7 |         2 |        4.50 | 2023-01-15 |
+|       8 |        12 |        3.00 | 2023-01-20 |
++---------+-----------+-------------+------------+
+5 rows in set (0.000 sec)
+
+Process
++----------------+----------+
+| transaction_id | staff_id |
++----------------+----------+
+|             19 |        1 |
+|             10 |        2 |
+|              1 |        3 |
+|              2 |        3 |
+|              3 |        6 |
++----------------+----------+
+5 rows in set (0.000 sec)
+
+Publish
++---------+--------------+
+| item_id | publisher_id |
++---------+--------------+
+|       2 |            1 |
+|       3 |            1 |
+|     102 |            1 |
+|     101 |            3 |
+|     152 |            3 |
+|     151 |            6 |
+|       1 |            9 |
++---------+--------------+
+7 rows in set (0.000 sec)
+
+Publisher
++--------------+----------------------------+
+| publisher_id | name                       |
++--------------+----------------------------+
+|            1 | Penguin Random House       |
+|            2 | HarperCollins              |
+|            3 | Simon & Schuster           |
+|            4 | Hachette Livre             |
+|            5 | Macmillan Publishers       |
+|            6 | Scholastic                 |
+|            7 | Oxford University Press    |
+|            8 | Cambridge University Press |
+|            9 | Bloomsbury                 |
+|           10 | Tor Books                  |
+|           11 | Vintage                    |
+|           12 | Knopf Doubleday            |
+|           13 | Little, Brown              |
+|           14 | William Morrow             |
+|           15 | St. Martin Press           |
+|           16 | Putnam                     |
+|           17 | Riverhead                  |
+|           18 | Picador                    |
+|           19 | Grove Press                |
+|           20 | Algonquin Books            |
++--------------+----------------------------+
+20 rows in set (0.000 sec)
+
+Rating
++-----------+---------+-------------+
+| member_id | item_id | stars_given |
++-----------+---------+-------------+
+|         1 |       1 |           5 |
+|         1 |       3 |           4 |
+|         2 |     101 |           4 |
+|        11 |       2 |           3 |
+|        21 |       5 |           5 |
++-----------+---------+-------------+
+5 rows in set (0.000 sec)
+
+Receive
++-------------------+------------+
+| recommendation_id | account_id |
++-------------------+------------+
+|                 1 |          2 |
+|                 2 |         12 |
+|                 3 |         22 |
++-------------------+------------+
+3 rows in set (0.000 sec)
+
+Recommendation
++-------------------+
+| recommendation_id |
++-------------------+
+|                 1 |
+|                 2 |
+|                 3 |
+|                 4 |
+|                 5 |
++-------------------+
+5 rows in set (0.000 sec)
+
+Regular
++-----------+-----------------+
+| member_id | available_limit |
++-----------+-----------------+
+|         1 |               5 |
+|         2 |               5 |
+|         3 |               5 |
+|        31 |               5 |
+|        34 |               5 |
++-----------+-----------------+
+5 rows in set (0.000 sec)
+
+Senior_Citizen
++-----------+-----------------+
+| member_id | available_limit |
++-----------+-----------------+
+|        21 |               5 |
+|        22 |               5 |
+|        23 |               5 |
+|        33 |               5 |
+|        36 |               5 |
++-----------+-----------------+
+5 rows in set (0.000 sec)
+
+Staff
++----------+-----------------------+-------------------+
+| staff_id | role                  | name              |
++----------+-----------------------+-------------------+
+|        1 | Head Librarian        | James Wilson      |
+|        2 | Assistant Librarian   | Mary Thompson     |
+|        3 | Circulation Desk      | Robert Garcia     |
+|        4 | IT Specialist         | Jennifer Martinez |
+|        5 | Cataloging Specialist | David Robinson    |
+|        6 | Reference Librarian   | Lisa Clark        |
+|        7 | Children Librarian    | Thomas Rodriguez  |
+|        8 | Acquisitions          | Susan Lewis       |
+|        9 | Archivist             | Daniel Walker     |
+|       10 | Library Assistant     | Karen Hall        |
+|       11 | Library Assistant     | Paul Young        |
+|       12 | Evening Supervisor    | Nancy Allen       |
+|       13 | Weekend Staff         | Kevin King        |
+|       14 | Digital Resources     | Amanda Wright     |
+|       15 | Outreach Coordinator  | Jason Hill        |
++----------+-----------------------+-------------------+
+15 rows in set (0.000 sec)
+
+Student
++-----------+-----------------+
+| member_id | available_limit |
++-----------+-----------------+
+|        11 |              10 |
+|        12 |              10 |
+|        13 |              10 |
+|        32 |              10 |
+|        35 |              10 |
++-----------+-----------------+
+5 rows in set (0.000 sec)
+
+Waitlist
++-------------+--------------+------------------------+----------------+
+| waitlist_id | request_date | waitlist_status        | fulfilled_date |
++-------------+--------------+------------------------+----------------+
+|           1 | 2023-03-01   | available_for_checkout | 2023-03-15     |
+|           2 | 2023-03-05   | available_for_checkout | 2023-03-20     |
+|           3 | 2023-03-10   | available_for_checkout | 2023-03-25     |
+|           4 | 2023-04-01   | on_hold                | NULL           |
+|           5 | 2023-04-05   | on_hold                | NULL           |
+|           6 | 2023-04-10   | on_hold                | NULL           |
+|           7 | 2023-04-15   | available_for_checkout | 2023-04-30     |
+|           8 | 2023-04-20   | on_hold                | NULL           |
+|           9 | 2023-04-25   | available_for_checkout | 2023-05-10     |
+|          10 | 2023-05-01   | on_hold                | NULL           |
++-------------+--------------+------------------------+----------------+
+10 rows in set (0.000 sec)

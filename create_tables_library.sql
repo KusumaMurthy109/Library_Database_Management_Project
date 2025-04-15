@@ -91,6 +91,7 @@ CREATE TABLE Book (
 	item_id INT,
 	author VARCHAR(30) NOT NULL,
 	availability_status BOOLEAN NOT NULL DEFAULT 1,
+	-- NOT NEEDED?
 	book_rating DECIMAL(3, 2),
 	genre VARCHAR(30) NOT NULL,
 	ISBN CHAR(16) NOT NULL,

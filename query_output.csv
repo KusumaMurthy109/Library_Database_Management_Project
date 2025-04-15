@@ -1,0 +1,50 @@
+1.
++---------+--------------+---------------------+-------------+---------+----------------+-------------------------------------------+------------------+
+| item_id | author       | availability_status | book_rating | genre   | ISBN           | title                                     | publication_year |
++---------+--------------+---------------------+-------------+---------+----------------+-------------------------------------------+------------------+
+|       1 | J.K. Rowling |                   1 |        4.80 | Fantasy | 978-0747532743 | Harry Potter and the Philosopher's Stone  |             1997 |
+|      11 | J.K. Rowling |                   1 |        4.10 | Fantasy | 978-1338878950 | Harry Potter and the Goblet of Fire       |             2000 |
+|      12 | J.K. Rowling |                   1 |        4.20 | Fantasy | 978-0439064866 | Harry Potter and the Chamber of Secrets   |             1998 |
+|      13 | J.K. Rowling |                   1 |        4.30 | Fantasy | 978-0439136358 | Harry Potter and the Prisoner of Azkaban  |             1999 |
+|      14 | J.K. Rowling |                   1 |        4.40 | Fantasy | 978-0439358064 | Harry Potter and the Order of the Phoenix |             2003 |
+|      15 | J.K. Rowling |                   1 |        4.50 | Fantasy | 978-0439784542 | Harry Potter and the Half-Blood Prince    |             2005 |
+|      16 | J.K. Rowling |                   1 |        4.60 | Fantasy | 978-1338878981 | Harry Potter and the Deathly Hallows      |             2007 |
++---------+--------------+---------------------+-------------+---------+----------------+-------------------------------------------+------------------+
+
+2.
++---------+--------------+---------------------+-------------+----------+----------------+-------------------------------------------+------------------+
+| item_id | author       | availability_status | book_rating | genre    | ISBN           | title                                     | publication_year |
++---------+--------------+---------------------+-------------+----------+----------------+-------------------------------------------+------------------+
+|       7 | Dan Brown    |                   1 |        3.90 | Thriller | 978-0307474278 | The Da Vinci Code                         |             2003 |
+|      14 | J.K. Rowling |                   1 |        4.40 | Fantasy  | 978-0439358064 | Harry Potter and the Order of the Phoenix |             2003 |
++---------+--------------+---------------------+-------------+----------+----------------+-------------------------------------------+------------------+
+
+3.
++----------------+----------------+----------------------+------------+----------+
+| name           | account_status | contact_information  | book_limit | fee_type |
++----------------+----------------+----------------------+------------+----------+
+| Jennifer Adams | active         | jennifer.a@email.com |          5 |     0.30 |
++----------------+----------------+----------------------+------------+----------+
+
+4.
++-----------+---------------+------------------+
+| member_id | name          | total_fines_owed |
++-----------+---------------+------------------+
+|         1 | John Smith    |           210.30 |
+|         2 | Sarah Johnson |             0.00 |
+|        11 | Emily Davis   |           140.00 |
+|        12 | David Wilson  |             0.00 |
+|        21 | Robert Taylor |           104.85 |
++-----------+---------------+------------------+
+
+5.
++---------+------------------------------------------+---------+
+| copy_id | title                                    | genre   |
++---------+------------------------------------------+---------+
+|       1 | Harry Potter and the Philosopher's Stone | Fantasy |
+|       3 | Harry Potter and the Philosopher's Stone | Fantasy |
+|       5 | Harry Potter and the Philosopher's Stone | Fantasy |
+|      10 | A Game of Thrones                        | Fantasy |
++---------+------------------------------------------+---------+
+
+6.
