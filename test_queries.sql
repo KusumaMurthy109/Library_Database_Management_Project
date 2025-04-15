@@ -1,12 +1,12 @@
--- List all books by a specific author --------------------------------------------------------------------------
+-- 1. List all books by a specific author --------------------------------------------------------------------------
 SELECT *
 FROM Book
 WHERE author = 'J.K. Rowling';
--- Find books by publication year -------------------------------------------------------------------------------
+-- 2. Find books by publication year -------------------------------------------------------------------------------
 SELECT *
 FROM Book
 WHERE publication_year = 2003;
--- Check membership status --------------------------------------------------------------------------------------
+-- 3. Check membership status --------------------------------------------------------------------------------------
 SELECT name,
     account_status,
     contact_information,
@@ -14,7 +14,7 @@ SELECT name,
     fee_type
 FROM Library_Member
 WHERE member_id = 31;
--- Fine Calculation ---------------------------------------------------------------------------------------------
+-- 4. Fine Calculation ---------------------------------------------------------------------------------------------
 SELECT m.member_id,
     m.name,
     SUM(
@@ -30,32 +30,75 @@ FROM Library_Member m -- Join this table with the tables mentioned below
     -- Group by the member to get their total sum of incurred fees.
 GROUP BY m.member_id,
     m.name;
--- Book Availability --------------------------------------------------------------------------------------------
+-- 5. Book Availability --------------------------------------------------------------------------------------------
 SELECT c.copy_id,
     bk.title,
     bk.genre
 FROM Book bk
-    JOIN Library_Item li ON bk.item_id = li.item_id
-    JOIN Originate o ON li.item_id = o.item_id
+    JOIN Originate o ON bk.item_id = o.item_id
     JOIN Copy c ON o.copy_id = c.copy_id
 WHERE c.status = 'in_stock'
-    and bk.genre = 'Fantasy';
--- Frequent borrowers of a specific genre
--- Books due soon --------------------------------------------------------------------------
--- Members with overdue books --------------------------------------------------------------------------
--- Average borrowing time --------------------------------------------------------------------------
--- Most popular author in the last month --------------------------------------------------------------------------
--- Monthly fees report --------------------------------------------------------------------------
--- Exceeding borrowing limits --------------------------------------------------------------------------
--- Frequent borrowed items by client type --------------------------------------------------------------------------
--- Never late returns --------------------------------------------------------------------------
--- Average loan duration --------------------------------------------------------------------------
--- Monthly Summary Report --------------------------------------------------------------------------
--- Statistics Breakdown --------------------------------------------------------------------------
--- Client Borrowing Report --------------------------------------------------------------------------
--- Item availability and history --------------------------------------------------------------------------
--- Overdue items report --------------------------------------------------------------------------
--- Revenue summary --------------------------------------------------------------------------
+    AND bk.genre = 'Fantasy';
+-- 6. Frequent borrowers of a specific genre (CHECK) -----------------------------------------------------------------------
+SELECT lm.member_id,
+    lm.name,
+    MAX(c.copy_id)
+FROM Library_Member lm
+    JOIN Make m ON lm.member_id = m.member_id
+    JOIN Library_Transaction lt ON m.transaction_id = lt.transaction_id
+    JOIN Loan l ON lt.transaction_id = l.transaction_id
+    JOIN Copy c ON l.copy_id = c.copy_id
+    JOIN Originate o ON c.copy_id = o.copy_id
+    JOIN Book bk ON o.item_id = bk.item_id
+WHERE bk.genre = "Fantasy"
+GROUP BY lm.member_id,
+    lm.name;
+-- 7. Books Due Soon (CHECK) ----------------------------------------------------------------------------------------------
+SELECT lm.member_id,
+    lm.name AS member_name,
+    b.title AS book_title,
+    lt.due_date
+FROM Library_Member lm
+    JOIN Make mk ON lm.member_id = mk.member_id
+    JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id
+    JOIN Loan l ON lt.transaction_id = l.transaction_id
+    JOIN Copy c ON l.copy_id = c.copy_id
+    JOIN Originate o ON c.copy_id = o.copy_id
+    JOIN Book b ON o.item_id = b.item_id
+WHERE lt.return_date IS NULL
+    AND lt.due_date >= CURDATE()
+    AND lt.due_date <= CURDATE() + 7
+ORDER BY lt.due_date ASC;
+-- 8. Members with overdue books (CHECK) ----------------------------------------------------------------------------------
+SELECT lm.member_id,
+    lm.name AS member_name,
+    b.title AS overdue_book_title,
+    lt.due_date
+FROM Library_Member lm
+    JOIN Make mk ON lm.member_id = mk.member_id
+    JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id
+    JOIN Loan lo ON lt.transaction_id = lo.transaction_id
+    JOIN Copy c ON lo.copy_id = c.copy_id
+    JOIN Originate o ON c.copy_id = o.copy_id
+    JOIN Book b ON o.item_id = b.item_id
+WHERE lt.return_date IS NULL
+    AND lt.due_date < CURDATE();
+-- 9. Average borrowing time -----------------------------------------------------------------------------------
+-- 10. Most popular author in the last month -----------------------------------------------------------------------
+-- 11. Monthly fees report (CHECK) -----------------------------------------------------------------------------------------
+SELECT lm.type_id AS membership_type,
+    SUM(p.amount_paid) AS total_fees_collected
+FROM Pay p
+    JOIN Library_Member lm ON p.member_id = lm.member_id
+WHERE p.paid_date >= (CURDATE() - 30)
+GROUP BY lm.type_id;
+-- Exceeding borrowing limits ----------------------------------------------------------------------------------
+-- Frequent borrowed items by client type ----------------------------------------------------------------------
+-- Never late returns ------------------------------------------------------------------------------------------
+-- Average loan duration ---------------------------------------------------------------------------------------
+-- Monthly Summary Report --------------------------------------------------------------------------------------
+-- Client Borrowing Report -------------------------------------------------------------------------------------
+-- Overdue items report ----------------------------------------------------------------------------------------
 SELECT lm.type_id AS membership_type,
     g.genre_name,
     SUM(p.amount_paid) AS total_paid
