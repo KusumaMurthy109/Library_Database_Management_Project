@@ -244,7 +244,7 @@ CREATE TABLE Process (
 CREATE TABLE Loan (
 	copy_id INT,
 	transaction_id INT,
-	PRIMARY KEY (copy_id),
+	PRIMARY KEY (copy_id, transaction_id),
 	FOREIGN KEY (copy_id) REFERENCES Copy (copy_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	FOREIGN KEY (transaction_id) REFERENCES Library_Transaction (transaction_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
