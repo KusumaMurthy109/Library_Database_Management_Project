@@ -10,6 +10,8 @@ VALUES (1, 'checked_out'),
     (8, 'checked_out'),
     (9, 'checked_out'),
     (10, 'checked_out'),
+    (11, 'in_stock'),
+    (12, 'in_stock'),
     (301, 'checked_out'),
     (302, 'checked_out'),
     (303, 'checked_out'),
@@ -118,7 +120,7 @@ INSERT INTO Library_Transaction (
         due_date,
         return_date
     )
-VALUES (1, '2025-04-01', '2025-04-15', NULL),
+VALUES (1, '2025-04-10', '2025-04-24', NULL),
     (2, '2025-04-02', '2025-04-16', NULL),
     (3, '2025-04-03', '2025-04-17', NULL),
     (4, '2025-03-15', '2025-03-29', '2025-03-28'),
@@ -920,6 +922,8 @@ VALUES -- Book copies
     (8, 2),
     (9, 3),
     (10, 3),
+    (11, 3),
+    (12, 1),
     -- Digital media copies
     (301, 101),
     (302, 102),

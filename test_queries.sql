@@ -39,7 +39,7 @@ FROM Book bk
     JOIN Copy c ON o.copy_id = c.copy_id
 WHERE c.status = 'in_stock'
     AND bk.genre = 'Fantasy';
--- 6. Frequent borrowers of a specific genre (CHECK) -----------------------------------------------------------------------
+-- 6. Frequent borrowers of a specific genre -----------------------------------------------------------------------
 WITH total_fantasy_recent_checked_out AS (
     SELECT lm.member_id,
         lm.name,
@@ -69,7 +69,7 @@ SELECT member_id,
     name,
     MAX(total_checked_out)
 FROM total_fantasy_recent_checked_out tf;
--- 7. Books Due Soon (CHECK) ----------------------------------------------------------------------------------------------
+-- 7. Books Due Soon ----------------------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name AS member_name,
     b.title AS book_title,
@@ -85,7 +85,7 @@ WHERE lt.return_date IS NULL
     AND lt.due_date >= CURDATE()
     AND lt.due_date <= CURDATE() + 7
 ORDER BY lt.due_date ASC;
--- 8. Members with overdue books (CHECK) ----------------------------------------------------------------------------------
+-- 8. Members with overdue books (QUERY FINE, NEED TO FIX DATA) ----------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name AS member_name,
     b.title AS overdue_book_title,
@@ -99,7 +99,7 @@ FROM Library_Member lm
     JOIN Book b ON o.item_id = b.item_id
 WHERE lt.return_date IS NULL
     AND lt.due_date < CURDATE();
--- 9. Average borrowing time (CHECK) -----------------------------------------------------------------------------------
+-- 9. Average borrowing time (BELIEVE IT WORKS) -----------------------------------------------------------------------------------
 SELECT b.genre,
     -- Get genre of the book (ex. Fantasy)
     AVG(DATEDIFF(lt.return_date, lt.checked_out_date)) AS days_borrowed -- Average number of days books were borrowed for the genre
@@ -109,9 +109,9 @@ FROM Library_Transaction lt
     JOIN Originate o ON c.copy_id = o.copy_id -- Link copies to the original book/item
     JOIN Book b ON o.item_id = b.item_id -- Access the book to get genre info
 WHERE lt.return_date IS NOT NULL -- Only consider books that have been returned
+    -- Filter to "Fantasy" (can be replaced with any genre)
     AND b.genre = 'Fantasy';
--- Filter to "Fantasy" (can be replaced with any genre)
--- 10. Most popular author in the last month (CHECK) -----------------------------------------------------------------------
+-- 10. Most popular author in the last month (WORKS? NEED TO CHANGE THE CURDATE THING) -----------------------------------------------------------------------
 SELECT b.author,
     COUNT(*) AS borrow_count
 FROM Library_Transaction lt -- Represents the transaction activity (book borrowed or returned)
@@ -126,7 +126,7 @@ GROUP BY b.author -- Group by author to count the borrowings per author
 ORDER BY borrow_count DESC -- Sort by most borrowed
     -- Return the most popular author (with the highest borrow count)
 LIMIT 1;
--- 11. Monthly fees report (CHECK) -----------------------------------------------------------------------------------------
+-- 11. Monthly fees report (WORKS BUT NEED TO FIX EITHER DATA OR QUERY) -----------------------------------------------------------------------------------------
 SELECT lm.type_id AS membership_type,
     SUM(p.amount_paid) AS total_fees_collected
 FROM Pay p
@@ -146,9 +146,20 @@ FROM Pay p
     JOIN Genre g ON c.genre_id = g.genre_id
 GROUP BY lm.type_id,
     g.genre_name;
--- 12. Exceeding borrowing limits ----------------------------------------------------------------------------------
+-- 12. Exceeding borrowing limits (EMPTY SET - HOW TO CHECK IF EXCEEDED LIMIT??) ----------------------------------------------------------------------------------
 -- on Nikka tab in junk 
--- 13. Frequent borrowed items by client type ----------------------------------------------------------------------
+SELECT lm.name,
+    -- select clients name, book limit, and number of books they have checkout
+    lm.book_limit,
+    COUNT(*) AS current_loans
+FROM Library_Member lm
+    JOIN Make mk ON lm.member_id = mk.member_id -- joins library member with make and library transaction to check the status of the return date
+    JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id
+WHERE lt.return_date IS NULL -- only consider books that have not been returned
+GROUP BY lm.name,
+    lm.book_limit -- group by name and limit and only include members with checkout books greater than their book limit
+HAVING COUNT(*) > lm.book_limit;
+-- 13. Frequent borrowed items by client type (NOT EXACTLY OUTPUT WE WANT, PUT A QUERY THAT COULD FIX IT) ----------------------------------------------------------------------
 SELECT lm.type_id AS client_type,
     -- The type of library member (e.g., Regular, Student, Senior)
     li.item_id,
@@ -163,15 +174,43 @@ GROUP BY lm.type_id,
     li.item_id -- Group by client type and item to count borrowings
 ORDER BY lm.type_id,
     borrow_count DESC;
+WITH Borrowings AS (
+    SELECT lm.type_id AS client_type,
+        li.item_id,
+        COUNT(*) AS borrow_count
+    FROM Library_Member lm
+        JOIN Make mk ON lm.member_id = mk.member_id
+        JOIN Loan ln ON mk.transaction_id = ln.transaction_id
+        JOIN Originate o ON ln.copy_id = o.copy_id
+        JOIN Library_Item li ON o.item_id = li.item_id
+    GROUP BY lm.type_id,
+        li.item_id
+),
+RankedBorrowings AS (
+    SELECT client_type,
+        item_id,
+        borrow_count,
+        ROW_NUMBER() OVER (
+            PARTITION BY client_type
+            ORDER BY borrow_count DESC
+        ) AS rnk
+    FROM Borrowings
+)
+SELECT client_type,
+    item_id,
+    borrow_count
+FROM RankedBorrowings
+WHERE rnk = 1
+ORDER BY client_type;
 -- Sort results by client type and highest borrow count
 -- 14. Never late returns ------------------------------------------------------------------------------------------
--- 15. Average loan duration ---------------------------------------------------------------------------------------
+-- 15. Average loan duration (SAME OUTPUT AS 9? Think it works though)---------------------------------------------------------------------------------------
 SELECT -- Calculate the average number of days items stay on loan
     AVG(DATEDIFF(lt.return_date, lt.checked_out_date)) AS average_loan_duration
 FROM Library_Transaction lt
 WHERE -- Only include transactions where the item has been returned
     lt.return_date IS NOT NULL;
--- 16. Monthly summary report --------------------------------------------------------------------------------------
+-- 16. Monthly summary report (PRODUCES ERROR)--------------------------------------------------------------------------------------
 -- Note: might need to fix the monthly logic
 SELECT -- Total Items Loaned
     (
@@ -211,7 +250,7 @@ SELECT -- Total Items Loaned
 -- 18. Client borrowing report -------------------------------------------------------------------------------------
 -- 19. Item availability and history -------------------------------------------------------------------------------------
 -- on Nikka tab in junk 
--- 20. Overdue items report ----------------------------------------------------------------------------------------
+-- 20. Overdue items report (THINK IT WORKS) ----------------------------------------------------------------------------------------
 -- Note: might need to adjust date logic for consistency
 -- Show overdue items, the member responsible, and calculated late fees
 SELECT lm.member_id,
