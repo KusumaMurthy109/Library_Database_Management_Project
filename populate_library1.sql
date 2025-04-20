@@ -927,6 +927,9 @@ VALUES -- Book copies
     -- Digital media copies
     (301, 101),
     (302, 102),
+    (303, 103),
+    (304, 104),
+    (305, 105),
     -- Magazine copies
     (401, 151),
     (402, 151),

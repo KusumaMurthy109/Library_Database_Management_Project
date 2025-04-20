@@ -82,9 +82,9 @@ CREATE TABLE Fine (
 );
 CREATE TABLE Library_Item (
 	item_id INT,
-	checked_out_status BOOLEAN NOT NULL DEFAULT 0,
+	checked_out_status BOOLEAN NOT NULL DEFAULT 0, -- NOT USED
 	current_inventory INT,
-	overdue_status BOOLEAN NOT NULL DEFAULT 0,
+	overdue_status BOOLEAN NOT NULL DEFAULT 0, -- NOT USED
 	PRIMARY KEY (item_id)
 );
 CREATE TABLE Book (
