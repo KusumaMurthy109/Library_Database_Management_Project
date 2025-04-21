@@ -85,3 +85,62 @@
 |               2 |                 8.00 |
 |               3 |                 1.50 |
 +-----------------+----------------------+
+
+
+
+
+17. 
++-----------------+---------------+----------------+
+| membership_type | item_category | items_borrowed |
++-----------------+---------------+----------------+
+|               1 | Book          |              4 |
+|               2 | Book          |              8 |
+|               3 | Book          |              3 |
+|               2 | Digital Media |              1 |
+|               1 | Magazine      |              1 |
++-----------------+---------------+----------------+
+
+18.
+
+19. 
++---------+-------------------------------------------+----------------+--------------------+-------------------+
+| item_id | title                                     | is_checked_out | last_borrowed_date | borrow_status     |
++---------+-------------------------------------------+----------------+--------------------+-------------------+
+|       1 | Harry Potter and the Philosopher's Stone  |              1 | 2025-04-10         | Recently Borrowed |
+|       2 | The Shining                               |              1 | 2025-04-03         | Recently Borrowed |
+|       3 | A Game of Thrones                         |              1 | 2025-03-16         | Recently Borrowed |
+|       4 | Murder on the Orient Express              |              1 | NULL               | Never Borrowed    |
+|       5 | The Lord of the Rings                     |              1 | NULL               | Never Borrowed    |
+|       6 | To Kill a Mockingbird                     |              1 | NULL               | Never Borrowed    |
+|       7 | The Da Vinci Code                         |              1 | NULL               | Never Borrowed    |
+|       8 | The Handmaid's Tale                       |              1 | NULL               | Never Borrowed    |
+|       9 | American Gods                             |              1 | NULL               | Never Borrowed    |
+|      10 | The Old Man and the Sea                   |              1 | NULL               | Never Borrowed    |
+|      11 | Harry Potter and the Goblet of Fire       |              0 | NULL               | Never Borrowed    |
+|      12 | Harry Potter and the Chamber of Secrets   |              0 | NULL               | Never Borrowed    |
+|      13 | Harry Potter and the Prisoner of Azkaban  |              0 | NULL               | Never Borrowed    |
+|      14 | Harry Potter and the Order of the Phoenix |              0 | NULL               | Never Borrowed    |
+|      15 | Harry Potter and the Half-Blood Prince    |              0 | NULL               | Never Borrowed    |
+|      16 | Harry Potter and the Deathly Hallows      |              0 | NULL               | Never Borrowed    |
+|     101 | Outliers                                  |              1 | 2025-03-23         | Recently Borrowed |
+|     102 | Atomic Habits                             |              1 | 2025-03-24         | Recently Borrowed |
+|     103 | Daring Greatly                            |              0 | 2025-03-25         | Recently Borrowed |
+|     104 | Becoming (Audiobook)                      |              0 | 2025-03-26         | Recently Borrowed |
+|     105 | Homo Deus (eBook)                         |              1 | 2025-03-27         | Recently Borrowed |
+|     151 | National Geographic                       |              1 | 2025-03-28         | Recently Borrowed |
+|     152 | Time                                      |              1 | NULL               | Never Borrowed    |
+|     153 | The Economist                             |              0 | NULL               | Never Borrowed    |
+|     154 | Vogue                                     |              1 | NULL               | Never Borrowed    |
+|     155 | Good Housekeeping                         |              0 | NULL               | Never Borrowed    |
++---------+-------------------------------------------+----------------+--------------------+-------------------+
+
+21. 
++-----------------+---------------+---------------+
+| membership_type | item_type     | total_revenue |
++-----------------+---------------+---------------+
+| Regular         | Digital Media |          4.50 |
+| Regular         | Magazine      |          2.50 |
+| Senior_Citizen  | Book          |          1.50 |
+| Student         | Book          |          5.00 |
+| Student         | Digital Media |          3.00 |
++-----------------+---------------+---------------+

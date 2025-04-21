@@ -77,7 +77,7 @@ WHERE total_checked_out = (
         SELECT max_value
         FROM max_checked_out
     );
--- 7. Books Due Soon ----------------------------------------------------------------------------------------------
+-- 7. Books Due Soon (CHANGE DUE DATES TO HAVE OUTPUT DURING DEMO) ----------------------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name AS member_name,
     b.title AS book_title,
@@ -141,29 +141,36 @@ WHERE borrow_count = (
         SELECT max_borrowed
         FROm max_borrowed_books
     );
--- 11. Monthly fees report (FIXED?) -----------------------------------------------------------------------------------------
+-- 11. Monthly fees report -----------------------------------------------------------------------------------------
+-- OPTION 1
 SELECT lm.type_id AS membership_type,
     p.paid_date,
-    SUM(p.amount_paid) AS total_fees_collected
+    SUM(p.amount_paid) AS total_fees_collected,
+    (
+        SELECT SUM(p1.amount_paid)
+        FROM Pay p1
+        WHERE p1.paid_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+            AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
+    ) AS grand_total
 FROM Pay p
     JOIN Library_Member lm ON p.member_id = lm.member_id
 WHERE p.paid_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
     AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
 GROUP BY lm.type_id;
-/*
- SELECT lm.type_id AS membership_type,
- g.genre_name,
- SUM(p.amount_paid) AS total_paid
- FROM Pay p
- JOIN Library_Member lm ON p.member_id = lm.member_id
- JOIN Incur i ON p.fine_id = i.fine_id
- JOIN Loan l ON i.transaction_id = l.transaction_id
- JOIN Library_Item li ON l.copy_id = li.item_id
- JOIN Categorize c ON li.item_id = c.item_id
- JOIN Genre g ON c.genre_id = g.genre_id
- GROUP BY lm.type_id,
- g.genre_name;
- */
+-- OPTION 2
+SELECT lm.type_id AS membership_type,
+    p.paid_date,
+    p.amount_paid AS fee_paid,
+    @running_total := @running_total + p.amount_paid AS grand_total
+FROM Pay p
+    JOIN Library_Member lm ON p.member_id = lm.member_id,
+    (
+        SELECT @running_total := 0
+    ) AS init
+WHERE p.paid_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+    AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
+ORDER BY lm.type_id,
+    p.paid_date;
 -- 12. Exceeding borrowing limits (EMPTY SET - HOW TO CHECK IF EXCEEDED LIMIT??) ----------------------------------------------------------------------------------
 SELECT lm.name,
     -- Select clients name, book limit, and number of books they have checkout
@@ -206,7 +213,7 @@ FROM RankedBorrowings
 WHERE rnk = 1
 ORDER BY client_type;
 -- Sort results by client type and highest borrow count
--- 14. Never late returns (PRODUCES OUTPUT, NEED TO CHECK IT) ------------------------------------------------------------------------------------------
+-- 14. Never late returns ------------------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name,
     lm.contact_information
@@ -217,7 +224,13 @@ WHERE NOT EXISTS (
         FROM Make m
             JOIN Library_Transaction lt ON m.transaction_id = lt.transaction_id
         WHERE m.member_id = lm.member_id
-            AND lt.return_date > lt.due_date -- this is the condition for checking late returns
+            AND (
+                lt.return_date > lt.due_date
+                OR (
+                    lt.return_date IS NULL
+                    AND CURDATE() > lt.due_date
+                )
+            ) -- this is the condition for checking late returns
     )
     AND EXISTS (
         -- this subquery checks to see if a member has one item returned
@@ -228,13 +241,13 @@ WHERE NOT EXISTS (
             AND lt.return_date IS NOT NULL
     )
 ORDER BY lm.name;
--- 15. Average loan duration (SAME OUTPUT AS 9 --> Is it asking for a specific item?)---------------------------------------------------------------------------------------
+-- 15. Average loan duration (WORKS, TRY TO CHANGE DATA so that it has a variety of date durations)---------------------------------------------------------------------------------------
 SELECT -- Calculate the average number of days items stay on loan
     AVG(DATEDIFF(lt.return_date, lt.checked_out_date)) AS average_loan_duration
 FROM Library_Transaction lt
 WHERE -- Only include transactions where the item has been returned
     lt.return_date IS NOT NULL;
--- 16. Monthly summary report (WORKS but might want extra data since only 3 items loaned and no fees)--------------------------------------------------------------------------------------
+-- 16. Monthly summary report (WORKS can add data)--------------------------------------------------------------------------------------
 WITH total_items_loaned AS (
     SELECT COUNT(*) AS value
     FROM Loan l
@@ -317,7 +330,63 @@ FROM Library_Member lm -- Start from members
 WHERE lt.return_date IS NOT NULL -- Include only returned items
     -- Group by member type
 GROUP BY lm.type_id;
--- 18. Client borrowing report (NOT DONE) -------------------------------------------------------------------------------------
+-- 18. Client borrowing report -------------------------------------------------------------------------------------
+SELECT lm.member_id,
+    -- member_id unique ID of the library member
+    lm.name,
+    -- name full name of the client
+    lt.transaction_id,
+    -- transaction_id ID of each borrowing transaction
+    lt.checked_out_date,
+    -- checked_out_date when the item was borrowed
+    lt.due_date,
+    -- due_date when it was due
+    lt.return_date,
+    -- return_date actual return date (NULL if not returned)
+    COALESCE(b.title, dm.title, m.title) AS borrowed_title,
+    -- borrowed_title actual title of the borrowed item
+    SUM(
+        CASE
+            WHEN lt.return_date IS NULL -- Check if the book has not been returned yet.
+            AND lt.due_date < CURDATE() THEN DATEDIFF(CURDATE(), lt.due_date) * lm.fee_type -- And, compare if the due date is passed. Then, calculate the amount owed based on their fee type and how many days have passed.
+            ELSE 0 -- Otherwise, no fee is incurred.
+        END
+    ) AS overdue_balance,
+    -- overdue_balance total unpaid fees on the member's account
+    -- Reserved items: collect titles from Book, Digital Media, or Magazine
+    GROUP_CONCAT(
+        DISTINCT COALESCE(rb.title, rdm.title, rm.title) SEPARATOR ', '
+    ) AS reserved_items -- reserved_items comma-separated titles on hold
+FROM Library_Member lm -- Borrowing History
+    LEFT JOIN Make mk ON lm.member_id = mk.member_id
+    LEFT JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id
+    LEFT JOIN Loan l ON lt.transaction_id = l.transaction_id
+    LEFT JOIN Copy c ON l.copy_id = c.copy_id
+    LEFT JOIN Originate o ON c.copy_id = o.copy_id
+    LEFT JOIN Library_Item li ON o.item_id = li.item_id
+    LEFT JOIN Book b ON li.item_id = b.item_id -- join with Book table
+    LEFT JOIN Digital_Media_Item dm ON li.item_id = dm.item_id -- join with Digital Media table
+    LEFT JOIN Magazine m ON li.item_id = m.item_id -- join with Magazines table
+    -- Member Account
+    LEFT JOIN Member_Account ma ON lm.member_id = ma.account_id -- View relationship: member_id ↔ account_id
+    -- Reserved Items (on Hold)
+    LEFT JOIN Hold h ON lm.member_id = h.member_id
+    LEFT JOIN Copy rc ON h.copy_id = rc.copy_id
+    LEFT JOIN Originate ro ON rc.copy_id = ro.copy_id
+    LEFT JOIN Library_Item rli ON ro.item_id = rli.item_id
+    LEFT JOIN Book rb ON rli.item_id = rb.item_id -- reserved Book title
+    LEFT JOIN Digital_Media_Item rdm ON rli.item_id = rdm.item_id -- reserved Digital Media title
+    LEFT JOIN Magazine rm ON rli.item_id = rm.item_id -- reserved Magazine title
+GROUP BY lm.member_id,
+    lm.name,
+    lt.transaction_id,
+    lt.checked_out_date,
+    lt.due_date,
+    lt.return_date,
+    COALESCE(b.title, dm.title, m.title),
+    ma.overdue_balance
+ORDER BY lm.member_id,
+    lt.checked_out_date DESC;
 -- 19. Item availability and history (PRODUCES OUTPUT, NEED TO CHECK IT -- THINK DATA CHANGE NEEDED) -------------------------------------------------------------------------------------
 SELECT li.item_id,
     -- list all library items, their availability status, last borrowed date, and borrow status
@@ -376,3 +445,32 @@ WHERE lt.return_date IS NULL
     OR lt.return_date > lt.due_date -- Sort results by due date (earliest overdue first)
 ORDER BY lt.due_date ASC;
 -- 21. Revenue summary -------------------------------------------------------------------------------------
+-- NOTE the fine must be in the pay table to show up in total_revenue, some of the data in fine table is marked paid but not in pay table 
+-- how is the fine status getting updated ? if a member pays the fine then the status gets changed in the fine table ? 
+SELECT CASE
+        lm.type_id
+        WHEN 1 THEN 'Regular'
+        WHEN 2 THEN 'Student'
+        WHEN 3 THEN 'Senior_Citizen'
+    END AS membership_type,
+    CASE
+        WHEN b.item_id IS NOT NULL THEN 'Book'
+        WHEN dm.item_id IS NOT NULL THEN 'Digital Media'
+        WHEN m.item_id IS NOT NULL THEN 'Magazine'
+        ELSE 'Unknown'
+    END AS item_type,
+    SUM(p.amount_paid) AS total_revenue
+FROM Pay p
+    JOIN Library_Member lm ON p.member_id = lm.member_id -- Join to get membership type
+    JOIN Incur i ON p.fine_id = i.fine_id -- Link fines to transactions
+    JOIN Library_Transaction lt ON i.transaction_id = lt.transaction_id
+    JOIN Loan l ON lt.transaction_id = l.transaction_id -- Link transactions to items through loan and copy
+    JOIN Originate o ON l.copy_id = o.copy_id
+    JOIN Library_Item li ON o.item_id = li.item_id
+    LEFT JOIN Book b ON li.item_id = b.item_id -- Determine item category
+    LEFT JOIN Digital_Media_Item dm ON li.item_id = dm.item_id
+    LEFT JOIN Magazine m ON li.item_id = m.item_id
+GROUP BY membership_type,
+    item_type
+ORDER BY membership_type,
+    item_type;
