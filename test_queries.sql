@@ -73,7 +73,10 @@ SELECT member_id,
     name,
     total_checked_out
 FROM total_fantasy_recent_checked_out
-WHERE total_checked_out = (SELECT max_value FROM max_checked_out);
+WHERE total_checked_out = (
+        SELECT max_value
+        FROM max_checked_out
+    );
 -- 7. Books Due Soon ----------------------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name AS member_name,
@@ -110,7 +113,7 @@ SELECT b.genre,
     AVG(DATEDIFF(lt.return_date, lt.checked_out_date)) AS days_borrowed -- Average number of days books were borrowed for the genre
 FROM Library_Transaction lt
     JOIN Loan l ON lt.transaction_id = l.transaction_id -- Connect transactions to loans
-    JOIN Originate o ON c.copy_id = o.copy_id -- Link copies to the original book/item
+    JOIN Originate o ON l.copy_id = o.copy_id -- Link copies to the original book/item
     JOIN Book b ON o.item_id = b.item_id -- Access the book to get genre info
 WHERE lt.return_date IS NOT NULL -- Only consider books that have been returned
     -- Filter to "Fantasy" (can be replaced with any genre)
@@ -123,9 +126,8 @@ WITH recent_borrowed_books_by_author AS (
         JOIN Loan l ON lt.transaction_id = l.transaction_id -- Links the transaction to specific copy details
         JOIN Originate o ON l.copy_id = o.copy_id -- Join to get the original book/item info
         JOIN Book b ON o.item_id = b.item_id -- Join to get the author of the book
-    WHERE lt.checked_out_date BETWEEN
-        DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01') AND
-        LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
+    WHERE lt.checked_out_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+        AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
         AND lt.return_date IS NOT NULL -- Filter for transactions that occurred in the last month and only include transactions that have been returned (completed loans)
     GROUP BY b.author -- Group by author to count the borrowings per author
 ),
@@ -135,30 +137,33 @@ max_borrowed_books AS (
 )
 SELECT *
 FROM recent_borrowed_books_by_author
-WHERE borrow_count = (SELECT max_borrowed FROm max_borrowed_books);
+WHERE borrow_count = (
+        SELECT max_borrowed
+        FROm max_borrowed_books
+    );
 -- 11. Monthly fees report (FIXED?) -----------------------------------------------------------------------------------------
-SELECT lm.type_id AS membership_type, p.paid_date,
+SELECT lm.type_id AS membership_type,
+    p.paid_date,
     SUM(p.amount_paid) AS total_fees_collected
 FROM Pay p
     JOIN Library_Member lm ON p.member_id = lm.member_id
-WHERE p.paid_date BETWEEN
-        DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01') AND
-        LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
+WHERE p.paid_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+    AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
 GROUP BY lm.type_id;
 /*
-SELECT lm.type_id AS membership_type,
-    g.genre_name,
-    SUM(p.amount_paid) AS total_paid
-FROM Pay p
-    JOIN Library_Member lm ON p.member_id = lm.member_id
-    JOIN Incur i ON p.fine_id = i.fine_id
-    JOIN Loan l ON i.transaction_id = l.transaction_id
-    JOIN Library_Item li ON l.copy_id = li.item_id
-    JOIN Categorize c ON li.item_id = c.item_id
-    JOIN Genre g ON c.genre_id = g.genre_id
-GROUP BY lm.type_id,
-    g.genre_name;
-*/
+ SELECT lm.type_id AS membership_type,
+ g.genre_name,
+ SUM(p.amount_paid) AS total_paid
+ FROM Pay p
+ JOIN Library_Member lm ON p.member_id = lm.member_id
+ JOIN Incur i ON p.fine_id = i.fine_id
+ JOIN Loan l ON i.transaction_id = l.transaction_id
+ JOIN Library_Item li ON l.copy_id = li.item_id
+ JOIN Categorize c ON li.item_id = c.item_id
+ JOIN Genre g ON c.genre_id = g.genre_id
+ GROUP BY lm.type_id,
+ g.genre_name;
+ */
 -- 12. Exceeding borrowing limits (EMPTY SET - HOW TO CHECK IF EXCEEDED LIMIT??) ----------------------------------------------------------------------------------
 SELECT lm.name,
     -- Select clients name, book limit, and number of books they have checkout
@@ -199,8 +204,30 @@ SELECT client_type,
     borrow_count
 FROM RankedBorrowings
 WHERE rnk = 1
-ORDER BY client_type; -- Sort results by client type and highest borrow count
--- 14. Never late returns ------------------------------------------------------------------------------------------
+ORDER BY client_type;
+-- Sort results by client type and highest borrow count
+-- 14. Never late returns (PRODUCES OUTPUT, NEED TO CHECK IT) ------------------------------------------------------------------------------------------
+SELECT lm.member_id,
+    lm.name,
+    lm.contact_information
+FROM Library_Member lm
+WHERE NOT EXISTS (
+        -- this subquery checks for the late returns, if any exists
+        SELECT 1
+        FROM Make m
+            JOIN Library_Transaction lt ON m.transaction_id = lt.transaction_id
+        WHERE m.member_id = lm.member_id
+            AND lt.return_date > lt.due_date -- this is the condition for checking late returns
+    )
+    AND EXISTS (
+        -- this subquery checks to see if a member has one item returned
+        SELECT 1
+        FROM Make m
+            JOIN Library_Transaction lt ON m.transaction_id = lt.transaction_id
+        WHERE m.member_id = lm.member_id
+            AND lt.return_date IS NOT NULL
+    )
+ORDER BY lm.name;
 -- 15. Average loan duration (SAME OUTPUT AS 9 --> Is it asking for a specific item?)---------------------------------------------------------------------------------------
 SELECT -- Calculate the average number of days items stay on loan
     AVG(DATEDIFF(lt.return_date, lt.checked_out_date)) AS average_loan_duration
@@ -211,7 +238,7 @@ WHERE -- Only include transactions where the item has been returned
 WITH total_items_loaned AS (
     SELECT COUNT(*) AS value
     FROM Loan l
-    JOIN Library_Transaction lt ON l.transaction_id = lt.transaction_id
+        JOIN Library_Transaction lt ON l.transaction_id = lt.transaction_id
     WHERE lt.checked_out_date BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-01') AND CURDATE()
 ),
 total_fees_collected AS (
@@ -222,34 +249,114 @@ total_fees_collected AS (
 most_popular_items AS (
     SELECT GROUP_CONCAT(title SEPARATOR ', ') AS value
     FROM (
-        SELECT b.title
-        FROM Loan l
-        JOIN Library_Transaction lt ON l.transaction_id = lt.transaction_id
-        JOIN Originate o ON l.copy_id = o.copy_id
-        JOIN Book b ON o.item_id = b.item_id
-        WHERE lt.checked_out_date BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-01') AND CURDATE()
-        GROUP BY b.title
-        ORDER BY COUNT(*) DESC
-        LIMIT 5
-    ) AS TopBooks
+            SELECT b.title
+            FROM Loan l
+                JOIN Library_Transaction lt ON l.transaction_id = lt.transaction_id
+                JOIN Originate o ON l.copy_id = o.copy_id
+                JOIN Book b ON o.item_id = b.item_id
+            WHERE lt.checked_out_date BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-01') AND CURDATE()
+            GROUP BY b.title
+            ORDER BY COUNT(*) DESC
+            LIMIT 5
+        ) AS TopBooks
 )
-SELECT 
-    til.value AS total_items_loaned,
+SELECT til.value AS total_items_loaned,
     tfc.value AS total_fees_collected,
     mpi.value AS most_popular_items
 FROM total_items_loaned til,
-     total_fees_collected tfc,
-     most_popular_items mpi;
--- 17. Statistics breakdown --------------------------------------------------------------------------------------
--- 18. Client borrowing report -------------------------------------------------------------------------------------
--- 19. Item availability and history -------------------------------------------------------------------------------------
--- on Nikka tab in junk 
+    total_fees_collected tfc,
+    most_popular_items mpi;
+-- 17. Statistics breakdown (PRODUCES OUTPUT, NEED TO CHECK IT) --------------------------------------------------------------------------------------
+-- This query gives a breakdown of how many items of each type (Book, Digital Media, Magazine)
+-- have been borrowed by each client type (Regular, Student, Senior)
+-- First section: Count of borrowed Books by member type
+SELECT lm.type_id AS membership_type,
+    -- Select the type ID of the member (1 = Regular, 2 = Student, 3 = Senior)
+    'Book' AS item_category,
+    -- Manually label this result as 'Book' category
+    COUNT(*) AS items_borrowed -- Count the number of books borrowed
+FROM Library_Member lm -- Start with the Library_Member table
+    JOIN Make mk ON lm.member_id = mk.member_id -- Join with Make table to get transactions by the member
+    JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id -- Join with transactions to access dates and other info
+    JOIN Loan lo ON lt.transaction_id = lo.transaction_id -- Join with Loan to find which copy was borrowed
+    JOIN Copy c ON lo.copy_id = c.copy_id -- Join with Copy to get the specific physical copy
+    JOIN Originate o ON c.copy_id = o.copy_id -- Join with Originate to get the item ID
+    JOIN Book b ON o.item_id = b.item_id -- Join with Book to confirm it is a book and get book data
+WHERE lt.return_date IS NOT NULL -- Only include records where the item was returned
+GROUP BY lm.type_id -- Group results by membership type
+UNION ALL
+-- Second section: Count of borrowed Digital Media items by member type
+SELECT lm.type_id AS membership_type,
+    -- Select the type ID of the member
+    'Digital Media' AS item_category,
+    -- Label this row as Digital Media
+    COUNT(*) AS items_borrowed -- Count the number of digital media borrowed
+FROM Library_Member lm -- Start from Library_Member
+    JOIN Make mk ON lm.member_id = mk.member_id -- Join to get transactions by member
+    JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id -- Join with transaction data
+    JOIN Loan lo ON lt.transaction_id = lo.transaction_id -- Join with Loan to get the borrowed copy
+    JOIN Copy c ON lo.copy_id = c.copy_id -- Join with Copy
+    JOIN Originate o ON c.copy_id = o.copy_id -- Join to get item ID
+    JOIN Digital_Media_Item d ON o.item_id = d.item_id -- Join with Digital_Media_Item to get digital media info
+WHERE lt.return_date IS NOT NULL -- Only include completed/returned items
+GROUP BY lm.type_id -- Group by member type
+UNION ALL
+-- Third section: Count of borrowed Magazines by member type
+SELECT lm.type_id AS membership_type,
+    -- Select the member type
+    'Magazine' AS item_category,
+    -- Label this row as Magazine
+    COUNT(*) AS items_borrowed -- Count how many magazines were borrowed
+FROM Library_Member lm -- Start from members
+    JOIN Make mk ON lm.member_id = mk.member_id -- Join to link members with transactions
+    JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id -- Join with transaction data
+    JOIN Loan lo ON lt.transaction_id = lo.transaction_id -- Join with Loan for borrowed copy
+    JOIN Copy c ON lo.copy_id = c.copy_id -- Join with Copy
+    JOIN Originate o ON c.copy_id = o.copy_id -- Get item ID
+    JOIN Magazine m ON o.item_id = m.item_id -- Join with Magazine table to confirm item type
+WHERE lt.return_date IS NOT NULL -- Include only returned items
+    -- Group by member type
+GROUP BY lm.type_id;
+-- 18. Client borrowing report (NOT DONE) -------------------------------------------------------------------------------------
+-- 19. Item availability and history (PRODUCES OUTPUT, NEED TO CHECK IT -- THINK DATA CHANGE NEEDED) -------------------------------------------------------------------------------------
+SELECT li.item_id,
+    -- list all library items, their availability status, last borrowed date, and borrow status
+    it.title,
+    li.checked_out_status AS is_checked_out,
+    MAX(lt.checked_out_date) AS last_borrowed_date,
+    CASE
+        -- 3 cases for borrow status (never borrowed, not borrowed in past 6 months, recently borrowed)
+        WHEN MAX(lt.checked_out_date) IS NULL THEN 'Never Borrowed'
+        WHEN MAX(lt.checked_out_date) < CURDATE() - INTERVAL 6 MONTH THEN 'Not borrowed in past 6 months'
+        ELSE 'Recently Borrowed'
+    END AS borrow_status
+FROM Library_Item li
+    LEFT JOIN (
+        -- left join to access all the titles for every library item
+        SELECT item_id,
+            title
+        FROM Book
+        UNION ALL
+        SELECT item_id,
+            title
+        FROM Digital_Media_Item
+        UNION ALL
+        SELECT item_id,
+            title
+        FROM Magazine
+    ) AS it ON li.item_id = it.item_id
+    LEFT JOIN Originate o ON li.item_id = o.item_id -- join every item with their copy, and library transaction to get the checked out date
+    LEFT JOIN Loan l ON o.copy_id = l.copy_id
+    LEFT JOIN Library_Transaction lt ON l.transaction_id = lt.transaction_id
+GROUP BY li.item_id,
+    li.checked_out_status,
+    it.title;
 -- 20. Overdue items report (THINK IT WORKS) ----------------------------------------------------------------------------------------
-SELECT 
-    lm.member_id,
+SELECT lm.member_id,
     lm.name,
     lt.transaction_id,
-    COALESCE(b.title, dm.title, m.title) AS title, -- Get title from whichever table it belongs to
+    COALESCE(b.title, dm.title, m.title) AS title,
+    -- Get title from whichever table it belongs to
     lt.due_date,
     DATEDIFF(CURDATE(), lt.due_date) AS days_late,
     lm.fee_type,
@@ -260,14 +367,12 @@ FROM Library_Member lm
     JOIN Loan l ON lt.transaction_id = l.transaction_id
     JOIN Copy c ON l.copy_id = c.copy_id
     JOIN Originate o ON c.copy_id = o.copy_id
-    JOIN Library_Item li ON o.item_id = li.item_id
-    -- These joins are based on li.item_id matching item_id in each subtype table
+    JOIN Library_Item li ON o.item_id = li.item_id -- These joins are based on li.item_id matching item_id in each subtype table
     LEFT JOIN Book b ON li.item_id = b.item_id
     LEFT JOIN Digital_Media_Item dm ON li.item_id = dm.item_id
     LEFT JOIN Magazine m ON li.item_id = m.item_id
 WHERE lt.return_date IS NULL
     AND lt.due_date < CURDATE()
-    OR lt.return_date > lt.due_date
+    OR lt.return_date > lt.due_date -- Sort results by due date (earliest overdue first)
 ORDER BY lt.due_date ASC;
--- Sort results by due date (earliest overdue first)
 -- 21. Revenue summary -------------------------------------------------------------------------------------
