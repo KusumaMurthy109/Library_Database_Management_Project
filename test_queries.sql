@@ -141,10 +141,8 @@ WHERE borrow_count = (
         SELECT max_borrowed
         FROm max_borrowed_books
     );
--- 11. Monthly fees report -----------------------------------------------------------------------------------------
--- OPTION 1
+-- 11. Monthly fees report (ADD FINE AND PAY DATA FOR LAST MONTH) -----------------------------------------------------------------------------------------
 SELECT lm.type_id AS membership_type,
-    p.paid_date,
     SUM(p.amount_paid) AS total_fees_collected,
     (
         SELECT SUM(p1.amount_paid)
@@ -157,20 +155,6 @@ FROM Pay p
 WHERE p.paid_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
     AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
 GROUP BY lm.type_id;
--- OPTION 2
-SELECT lm.type_id AS membership_type,
-    p.paid_date,
-    p.amount_paid AS fee_paid,
-    @running_total := @running_total + p.amount_paid AS grand_total
-FROM Pay p
-    JOIN Library_Member lm ON p.member_id = lm.member_id,
-    (
-        SELECT @running_total := 0
-    ) AS init
-WHERE p.paid_date BETWEEN DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
-    AND LAST_DAY(CURDATE() - INTERVAL 1 MONTH)
-ORDER BY lm.type_id,
-    p.paid_date;
 -- 12. Exceeding borrowing limits (EMPTY SET - HOW TO CHECK IF EXCEEDED LIMIT??) ----------------------------------------------------------------------------------
 SELECT lm.name,
     -- Select clients name, book limit, and number of books they have checkout
@@ -387,21 +371,24 @@ GROUP BY lm.member_id,
     ma.overdue_balance
 ORDER BY lm.member_id,
     lt.checked_out_date DESC;
--- 19. Item availability and history (ADDED SOME DATA, CHECKED - NEED TO CHANGE is_checked_out) -------------------------------------------------------------------------------------
+-- 19. Item availability and history (CHECKED, add data for status in Copy) -------------------------------------------------------------------------------------
 SELECT li.item_id,
-    -- list all library items, their availability status, last borrowed date, and borrow status
     it.title,
-    li.checked_out_status AS is_checked_out,
+    MAX(
+        CASE
+            WHEN c.copy_id IS NOT NULL THEN c.status
+            ELSE 'in_stock'
+        END
+    ) AS is_checked_out,
+    GROUP_CONCAT(DISTINCT c.copy_id) AS copy_ids,
     MAX(lt.checked_out_date) AS last_borrowed_date,
     CASE
-        -- 3 cases for borrow status (never borrowed, not borrowed in past 6 months, recently borrowed)
         WHEN MAX(lt.checked_out_date) IS NULL THEN 'Never Borrowed'
         WHEN MAX(lt.checked_out_date) < CURDATE() - INTERVAL 6 MONTH THEN 'Not borrowed in past 6 months'
         ELSE 'Recently Borrowed'
     END AS borrow_status
 FROM Library_Item li
     LEFT JOIN (
-        -- left join to access all the titles for every library item
         SELECT item_id,
             title
         FROM Book
@@ -414,13 +401,13 @@ FROM Library_Item li
             title
         FROM Magazine
     ) AS it ON li.item_id = it.item_id
-    LEFT JOIN Originate o ON li.item_id = o.item_id -- join every item with their copy, and library transaction to get the checked out date
-    LEFT JOIN Loan l ON o.copy_id = l.copy_id
+    LEFT JOIN Originate o ON li.item_id = o.item_id
+    LEFT JOIN Copy c ON o.copy_id = c.copy_id
+    LEFT JOIN Loan l ON c.copy_id = l.copy_id
     LEFT JOIN Library_Transaction lt ON l.transaction_id = lt.transaction_id
 GROUP BY li.item_id,
-    li.checked_out_status,
     it.title;
--- 20. Overdue items report (CHECKED and CHANGED - go over) ----------------------------------------------------------------------------------------
+-- 20. Overdue items report ----------------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name,
     lt.transaction_id,
@@ -455,8 +442,6 @@ WHERE lt.return_date IS NULL
     OR lt.return_date > lt.due_date -- Sort results by due date (earliest overdue first)
 ORDER BY lt.due_date ASC;
 -- 21. Revenue summary -------------------------------------------------------------------------------------
--- NOTE the fine must be in the pay table to show up in total_revenue, some of the data in fine table is marked paid but not in pay table 
--- how is the fine status getting updated ? if a member pays the fine then the status gets changed in the fine table ? 
 SELECT CASE
         lm.type_id
         WHEN 1 THEN 'Regular'
@@ -484,3 +469,4 @@ GROUP BY membership_type,
     item_type
 ORDER BY membership_type,
     item_type;
+-- Update Fines Daily --------------------------------------------------------------------------------------

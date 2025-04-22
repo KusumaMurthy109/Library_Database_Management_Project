@@ -1,3 +1,4 @@
+SHOW TABLES;
 SELECT *
 FROM Account_View;
 SELECT *
