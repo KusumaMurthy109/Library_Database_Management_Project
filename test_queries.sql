@@ -387,7 +387,7 @@ GROUP BY lm.member_id,
     ma.overdue_balance
 ORDER BY lm.member_id,
     lt.checked_out_date DESC;
--- 19. Item availability and history (PRODUCES OUTPUT, NEED TO CHECK IT -- THINK DATA CHANGE NEEDED) -------------------------------------------------------------------------------------
+-- 19. Item availability and history (ADDED SOME DATA, CHECKED - NEED TO CHANGE is_checked_out) -------------------------------------------------------------------------------------
 SELECT li.item_id,
     -- list all library items, their availability status, last borrowed date, and borrow status
     it.title,
@@ -420,16 +420,26 @@ FROM Library_Item li
 GROUP BY li.item_id,
     li.checked_out_status,
     it.title;
--- 20. Overdue items report (THINK IT WORKS) ----------------------------------------------------------------------------------------
+-- 20. Overdue items report (CHECKED and CHANGED - go over) ----------------------------------------------------------------------------------------
 SELECT lm.member_id,
     lm.name,
     lt.transaction_id,
     COALESCE(b.title, dm.title, m.title) AS title,
     -- Get title from whichever table it belongs to
     lt.due_date,
-    DATEDIFF(CURDATE(), lt.due_date) AS days_late,
+    CASE
+        WHEN lt.return_date IS NULL THEN DATEDIFF(CURDATE(), lt.due_date)
+        WHEN lt.return_date IS NOT NULL THEN DATEDIFF(lt.return_date, lt.due_date)
+    END AS days_late,
+    CASE
+        WHEN lt.return_date IS NOT NULL THEN "Returned"
+        WHEN lt.return_date IS NULL THEN "Not Yet Returned"
+    END AS returned_yet,
     lm.fee_type,
-    DATEDIFF(CURDATE(), lt.due_date) * lm.fee_type AS late_fee
+    CASE
+        WHEN lt.return_date IS NULL THEN DATEDIFF(CURDATE(), lt.due_date) * lm.fee_type
+        WHEN lt.return_date IS NOT NULL THEN DATEDIFF(lt.return_date, lt.due_date) * lm.fee_type
+    END AS late_fee
 FROM Library_Member lm
     JOIN Make mk ON lm.member_id = mk.member_id
     JOIN Library_Transaction lt ON mk.transaction_id = lt.transaction_id
