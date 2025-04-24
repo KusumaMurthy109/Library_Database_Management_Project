@@ -82,9 +82,11 @@ CREATE TABLE Fine (
 );
 CREATE TABLE Library_Item (
 	item_id INT,
-	checked_out_status BOOLEAN NOT NULL DEFAULT 0, -- NOT USED
+	checked_out_status BOOLEAN NOT NULL DEFAULT 0,
+	-- NOT USED
 	current_inventory INT,
-	overdue_status BOOLEAN NOT NULL DEFAULT 0, -- NOT USED
+	overdue_status BOOLEAN NOT NULL DEFAULT 0,
+	-- NOT USED
 	PRIMARY KEY (item_id)
 );
 CREATE TABLE Book (
@@ -107,7 +109,7 @@ CREATE TABLE Digital_Media_Item (
 	availability_status BOOLEAN NOT NULL DEFAULT 1,
 	genre VARCHAR(30) NOT NULL,
 	ISBN CHAR(16) NOT NULL,
-	title VARCHAR(30) NOT NULL,
+	title VARCHAR(40) NOT NULL,
 	publication_year YEAR NOT NULL,
 	PRIMARY KEY(item_id),
 	FOREIGN KEY (item_id) REFERENCES Library_Item (item_id) ON DELETE CASCADE ON UPDATE CASCADE,
