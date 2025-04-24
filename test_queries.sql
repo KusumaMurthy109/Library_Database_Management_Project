@@ -554,6 +554,10 @@ GROUP BY lm.member_id,
 ORDER BY books_read DESC -- rank members by most books read
     -- top 10 readers only
 LIMIT 10;
+-- Average Time on the Waitlist -------------------------------------------------------------------------------------
+SELECT ROUND(AVG(DATEDIFF(fulfilled_date, request_date)), 2) AS avg_fulfillment_days
+FROM Waitlist
+WHERE waitlist_status = 'available_for_checkout';
 -- Best Rated Books In Library -------------------------------------------------------------------------------------
 SELECT b.title,
     -- title of the book
