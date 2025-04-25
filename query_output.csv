@@ -1,4 +1,8 @@
-1.
+ ================
+ General Queries.
+ ================
+
+1. List all books by a specific author
 +---------+--------------+---------------------+-------------+---------+----------------+-------------------------------------------+------------------+
 | item_id | author       | availability_status | book_rating | genre   | ISBN           | title                                     | publication_year |
 +---------+--------------+---------------------+-------------+---------+----------------+-------------------------------------------+------------------+
@@ -11,7 +15,7 @@
 |      16 | J.K. Rowling |                   1 |        4.60 | Fantasy | 978-1338878981 | Harry Potter and the Deathly Hallows      |             2007 |
 +---------+--------------+---------------------+-------------+---------+----------------+-------------------------------------------+------------------+
 
-2.
+2. Find books by publication year
 +---------+--------------+---------------------+-------------+----------+----------------+-------------------------------------------+------------------+
 | item_id | author       | availability_status | book_rating | genre    | ISBN           | title                                     | publication_year |
 +---------+--------------+---------------------+-------------+----------+----------------+-------------------------------------------+------------------+
@@ -19,128 +23,441 @@
 |      14 | J.K. Rowling |                   1 |        4.40 | Fantasy  | 978-0439358064 | Harry Potter and the Order of the Phoenix |             2003 |
 +---------+--------------+---------------------+-------------+----------+----------------+-------------------------------------------+------------------+
 
-3.
+3. Check membership status
 +----------------+----------------+----------------------+------------+----------+
 | name           | account_status | contact_information  | book_limit | fee_type |
 +----------------+----------------+----------------------+------------+----------+
 | Jennifer Adams | active         | jennifer.a@email.com |          5 |     0.30 |
 +----------------+----------------+----------------------+------------+----------+
 
-4.
-+-----------+---------------+------------------+
-| member_id | name          | total_fines_owed |
-+-----------+---------------+------------------+
-|         1 | John Smith    |           210.30 |
-|         2 | Sarah Johnson |             0.00 |
-|        11 | Emily Davis   |           140.00 |
-|        12 | David Wilson  |             0.00 |
-|        21 | Robert Taylor |           104.85 |
-+-----------+---------------+------------------+
+4. Fine Calculation
++-----------+-----------------+------------------+
+| member_id | name            | total_fines_owed |
++-----------+-----------------+------------------+
+|         1 | John Smith      |             9.60 |
+|         2 | Sarah Johnson   |             9.30 |
+|         3 | Michael Brown   |             0.00 |
+|        11 | Emily Davis     |             1.80 |
+|        12 | David Wilson    |             0.00 |
+|        13 | Jessica Lee     |             3.80 |
+|        21 | Robert Taylor   |             3.60 |
+|        22 | Margaret Clark  |             2.25 |
+|        23 | Richard White   |             2.10 |
+|        31 | Jennifer Adams  |             6.90 |
+|        32 | Daniel Martin   |             3.60 |
+|        33 | Patricia Hall   |             0.00 |
+|        34 | Thomas Young    |             6.60 |
+|        35 | Elizabeth Scott |             3.40 |
++-----------+-----------------+------------------+
 
-5.
-+---------+------------------------------------------+---------+
-| copy_id | title                                    | genre   |
-+---------+------------------------------------------+---------+
-|       1 | Harry Potter and the Philosopher's Stone | Fantasy |
-|       3 | Harry Potter and the Philosopher's Stone | Fantasy |
-|       5 | Harry Potter and the Philosopher's Stone | Fantasy |
-|      10 | A Game of Thrones                        | Fantasy |
-+---------+------------------------------------------+---------+
+5. Book Availability
++---------+-------------------------------------------+---------+
+| copy_id | title                                     | genre   |
++---------+-------------------------------------------+---------+
+|       1 | Harry Potter and the Philosopher's Stone  | Fantasy |
+|      12 | Harry Potter and the Philosopher's Stone  | Fantasy |
+|      15 | The Lord of the Rings                     | Fantasy |
+|      19 | American Gods                             | Fantasy |
+|      20 | Harry Potter and the Goblet of Fire       | Fantasy |
+|      21 | Harry Potter and the Chamber of Secrets   | Fantasy |
+|      22 | Harry Potter and the Prisoner of Azkaban  | Fantasy |
+|      23 | Harry Potter and the Order of the Phoenix | Fantasy |
+|      24 | Harry Potter and the Half-Blood Prince    | Fantasy |
+|      25 | Harry Potter and the Deathly Hallows      | Fantasy |
++---------+-------------------------------------------+---------+
 
-6. (CHECK)
-+-----------+---------------+----------------+
-| member_id | name          | MAX(c.copy_id) |
-+-----------+---------------+----------------+
-|         1 | John Smith    |              2 |
-|         2 | Sarah Johnson |              9 |
-|        11 | Emily Davis   |              4 |
-|        12 | David Wilson  |             10 |
-+-----------+---------------+----------------+
+6. Frequent borrowers of a specific genre
++-----------+-------------+-------------------+
+| member_id | name        | total_checked_out |
++-----------+-------------+-------------------+
+|        11 | Emily Davis |                 4 |
++-----------+-------------+-------------------+
 
-7. (CHECK)
+7. Books Due Soon
++-----------+-------------+------------------------------------------+------------+
+| member_id | member_name | book_title                               | due_date   |
++-----------+-------------+------------------------------------------+------------+
+|         1 | John Smith  | Harry Potter and the Philosopher's Stone | 2025-05-02 |
++-----------+-------------+------------------------------------------+------------+
 
-8. (CHECK)
-+-----------+---------------+------------------------------------------+------------+
-| member_id | member_name   | overdue_book_title                       | due_date   |
-+-----------+---------------+------------------------------------------+------------+
-|         1 | John Smith    | Harry Potter and the Philosopher's Stone | 2023-05-15 |
-|        11 | Emily Davis   | Harry Potter and the Philosopher's Stone | 2023-05-16 |
-|        21 | Robert Taylor | The Shining                              | 2023-05-17 |
-+-----------+---------------+------------------------------------------+------------+
+8. Members with overdue books
++-----------+----------------+------------------------------------------+------------+
+| member_id | member_name    | overdue_book_title                       | due_date   |
++-----------+----------------+------------------------------------------+------------+
+|        31 | Jennifer Adams | Harry Potter and the Philosopher's Stone | 2025-04-02 |
+|        11 | Emily Davis    | Harry Potter and the Philosopher's Stone | 2025-04-16 |
+|        34 | Thomas Young   | Harry Potter and the Philosopher's Stone | 2025-04-03 |
+|        21 | Robert Taylor  | The Shining                              | 2025-04-17 |
++-----------+----------------+------------------------------------------+------------+
 
-9. (CHECK)
+9. Average borrowing time
 +---------+---------------+
 | genre   | days_borrowed |
 +---------+---------------+
-| Fantasy |       13.0000 |
+| Fantasy |          9.70 |
 +---------+---------------+
 
-10.
+10. Most popular author in the last month
++--------------+--------------+
+| author       | borrow_count |
++--------------+--------------+
+| Stephen King |            3 |
++--------------+--------------+
 
-11. (CHECK)
-+-----------------+----------------------+
-| membership_type | total_fees_collected |
-+-----------------+----------------------+
-|               1 |                 7.00 |
-|               2 |                 8.00 |
-|               3 |                 1.50 |
-+-----------------+----------------------+
+11. Monthly fees report
++-----------------+----------------------+-------------+
+| membership_type | total_fees_collected | grand_total |
++-----------------+----------------------+-------------+
+|               1 |                 1.80 |        2.85 |
+|               2 |                 0.60 |        2.85 |
+|               3 |                 0.45 |        2.85 |
++-----------------+----------------------+-------------+
 
+12. Exceeding borrowing limits
++------------+------------+---------------+
+| name       | book_limit | current_loans |
++------------+------------+---------------+
+| John Smith |          5 |             6 |
++------------+------------+---------------+
 
+13. Frequent borrowed items by client type
++-------------+---------+--------------+
+| client_type | item_id | borrow_count |
++-------------+---------+--------------+
+|           1 |       3 |            5 |
+|           2 |       1 |            5 |
+|           3 |       2 |            2 |
++-------------+---------+--------------+
 
+14. Never late returns
++-----------+---------------+------------------------+
+| member_id | name          | contact_information    |
++-----------+---------------+------------------------+
+|        12 | David Wilson  | david.w@university.edu |
+|        33 | Patricia Hall | patricia.h@email.com   |
++-----------+---------------+------------------------+
 
-17. 
+15. Average loan duration
++-----------------------+
+| average_loan_duration |
++-----------------------+
+|                 11.59 |
++-----------------------+
+
+16. Monthly summary report
++--------------------+----------------------+--------------------------------------------------------------------------+
+| total_items_loaned | total_fees_collected | most_popular_items                                                       |
++--------------------+----------------------+--------------------------------------------------------------------------+
+|                  7 |                 0.40 | A Game of Thrones, The Shining, Harry Potter and the Philosopher's Stone |
++--------------------+----------------------+--------------------------------------------------------------------------+
+
+17. Statistics breakdown
 +-----------------+---------------+----------------+
 | membership_type | item_category | items_borrowed |
 +-----------------+---------------+----------------+
-|               1 | Book          |              4 |
-|               2 | Book          |              8 |
-|               3 | Book          |              3 |
-|               2 | Digital Media |              1 |
-|               1 | Magazine      |              1 |
+|               1 | Book          |             12 |
+|               2 | Book          |             10 |
+|               3 | Book          |              4 |
+|               2 | Digital Media |              4 |
+|               3 | Digital Media |              3 |
+|               1 | Magazine      |              4 |
+|               2 | Magazine      |              1 |
+|               3 | Magazine      |              1 |
 +-----------------+---------------+----------------+
 
-18.
+18. Client borrowing report
++-----------+-----------------+----------------+------------------+------------+-------------+------------------------------------------+-----------------+------------------------------------------+
+| member_id | name            | transaction_id | checked_out_date | due_date   | return_date | borrowed_title                           | overdue_balance | reserved_items                           |
++-----------+-----------------+----------------+------------------+------------+-------------+------------------------------------------+-----------------+------------------------------------------+
+|         1 | John Smith      |              1 | 2025-04-25       | 2025-05-02 | NULL        | Harry Potter and the Philosopher's Stone |            0.00 | Harry Potter and the Philosopher's Stone |
+|         1 | John Smith      |             36 | 2025-04-23       | 2025-05-07 | NULL        | The Shining                              |            0.00 | Harry Potter and the Philosopher's Stone |
+|         1 | John Smith      |             37 | 2025-04-23       | 2025-05-07 | NULL        | A Game of Thrones                        |            0.00 | Harry Potter and the Philosopher's Stone |
+|         1 | John Smith      |             38 | 2025-04-23       | 2025-05-07 | NULL        | A Game of Thrones                        |            0.00 | Harry Potter and the Philosopher's Stone |
+|         1 | John Smith      |             39 | 2025-04-23       | 2025-05-07 | NULL        | A Game of Thrones                        |            0.00 | Harry Potter and the Philosopher's Stone |
+|         1 | John Smith      |             17 | 2025-03-10       | 2025-03-24 | NULL        | National Geographic                      |            9.60 | Harry Potter and the Philosopher's Stone |
+|         2 | Sarah Johnson   |              4 | 2025-03-15       | 2025-03-29 | 2025-03-25  | A Game of Thrones                        |            0.00 | NULL                                     |
+|         2 | Sarah Johnson   |             18 | 2025-03-11       | 2025-03-25 | NULL        | National Geographic                      |            9.30 | NULL                                     |
+|         3 | Michael Brown   |              6 | 2025-03-18       | 2025-04-01 | 2025-03-29  | Harry Potter and the Philosopher's Stone |            0.00 | NULL                                     |
+|         3 | Michael Brown   |             19 | 2025-03-12       | 2025-03-26 | 2025-03-23  | National Geographic                      |            0.00 | NULL                                     |
+|         3 | Michael Brown   |             32 | 2025-03-01       | 2025-03-14 | 2025-03-17  | The Shining                              |            0.00 | NULL                                     |
+|        11 | Emily Davis     |              2 | 2025-04-02       | 2025-04-16 | NULL        | Harry Potter and the Philosopher's Stone |            1.80 | The Shining                              |
+|        11 | Emily Davis     |              9 | 2025-03-21       | 2025-04-04 | 2025-04-01  | The Shining                              |            0.00 | The Shining                              |
+|        11 | Emily Davis     |             33 | 2025-03-02       | 2025-03-15 | 2025-03-18  | National Geographic                      |            0.00 | The Shining                              |
+|        11 | Emily Davis     |             23 | 2024-02-01       | 2024-02-15 | 2024-02-12  | Harry Potter and the Philosopher's Stone |            0.00 | The Shining                              |
+|        11 | Emily Davis     |             22 | 2024-01-15       | 2024-01-29 | 2024-01-25  | Harry Potter and the Philosopher's Stone |            0.00 | The Shining                              |
+|        11 | Emily Davis     |             21 | 2024-01-10       | 2024-01-24 | 2024-01-20  | Harry Potter and the Philosopher's Stone |            0.00 | The Shining                              |
+|        11 | Emily Davis     |             20 | 2024-01-05       | 2024-01-19 | 2024-01-10  | Harry Potter and the Philosopher's Stone |            0.00 | The Shining                              |
+|        12 | David Wilson    |             10 | 2025-03-22       | 2025-04-05 | 2025-04-04  | The Shining                              |            0.00 | NULL                                     |
+|        12 | David Wilson    |              5 | 2025-03-16       | 2025-03-30 | 2025-03-22  | A Game of Thrones                        |            0.00 | NULL                                     |
+|        13 | Jessica Lee     |             11 | 2025-03-23       | 2025-04-06 | NULL        | Outliers                                 |            3.80 | NULL                                     |
+|        21 | Robert Taylor   |              3 | 2025-04-03       | 2025-04-17 | NULL        | The Shining                              |            1.20 | A Game of Thrones                        |
+|        21 | Robert Taylor   |             14 | 2025-03-26       | 2025-04-09 | NULL        | Becoming (Audiobook)                     |            2.40 | A Game of Thrones                        |
+|        21 | Robert Taylor   |             35 | 2025-03-04       | 2025-03-17 | 2025-03-20  | Becoming (Audiobook)                     |            0.00 | A Game of Thrones                        |
+|        22 | Margaret Clark  |             15 | 2025-03-27       | 2025-04-10 | NULL        | Homo Deus (eBook)                        |            2.25 | NULL                                     |
+|        22 | Margaret Clark  |             25 | 2024-02-10       | 2024-02-24 | 2024-02-19  | The Shining                              |            0.00 | NULL                                     |
+|        22 | Margaret Clark  |             24 | 2024-02-05       | 2024-02-19 | 2024-02-11  | Harry Potter and the Philosopher's Stone |            0.00 | NULL                                     |
+|        23 | Richard White   |             16 | 2025-03-28       | 2025-04-11 | NULL        | National Geographic                      |            2.10 | NULL                                     |
+|        31 | Jennifer Adams  |              7 | 2025-03-19       | 2025-04-02 | NULL        | Harry Potter and the Philosopher's Stone |            6.90 | NULL                                     |
+|        31 | Jennifer Adams  |             34 | 2025-03-03       | 2025-03-16 | 2025-03-19  | Time                                     |            0.00 | NULL                                     |
+|        31 | Jennifer Adams  |             26 | 2024-03-01       | 2024-03-15 | 2024-03-13  | The Shining                              |            0.00 | NULL                                     |
+|        32 | Daniel Martin   |             12 | 2025-03-24       | 2025-04-07 | NULL        | Atomic Habits                            |            3.60 | NULL                                     |
+|        32 | Daniel Martin   |             31 | 2024-09-21       | 2024-10-05 | 2024-10-03  | The Old Man and the Sea                  |            0.00 | NULL                                     |
+|        32 | Daniel Martin   |             27 | 2024-03-05       | 2024-03-19 | 2024-03-15  | The Shining                              |            0.00 | NULL                                     |
+|        33 | Patricia Hall   |             28 | 2024-03-10       | 2024-03-24 | 2024-03-20  | A Game of Thrones                        |            0.00 | NULL                                     |
+|        34 | Thomas Young    |              8 | 2025-03-20       | 2025-04-03 | NULL        | Harry Potter and the Philosopher's Stone |            6.60 | NULL                                     |
+|        34 | Thomas Young    |             29 | 2024-03-15       | 2024-03-29 | 2024-04-02  | A Game of Thrones                        |            0.00 | NULL                                     |
+|        35 | Elizabeth Scott |             13 | 2025-03-25       | 2025-04-08 | NULL        | Daring Greatly                           |            3.40 | NULL                                     |
+|        35 | Elizabeth Scott |             30 | 2024-03-20       | 2024-04-03 | 2024-04-05  | Outliers                                 |            0.00 | NULL                                     |
+|        36 | Charles Allen   |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
+|       100 | Sophia Jacob    |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
+|       101 | Anna Lin        |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
+|       102 | Kusuma Murthy   |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
+|       103 | Ella Nyugen     |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
+|       104 | Nimra Syed      |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
+|       105 | Nikka Vuong     |           NULL | NULL             | NULL       | NULL        | NULL                                     |            0.00 | NULL                                     |
++-----------+-----------------+----------------+------------------+------------+-------------+------------------------------------------+-----------------+------------------------------------------+
 
-19. 
-+---------+-------------------------------------------+----------------+--------------------+-------------------+
-| item_id | title                                     | is_checked_out | last_borrowed_date | borrow_status     |
-+---------+-------------------------------------------+----------------+--------------------+-------------------+
-|       1 | Harry Potter and the Philosopher's Stone  |              1 | 2025-04-10         | Recently Borrowed |
-|       2 | The Shining                               |              1 | 2025-04-03         | Recently Borrowed |
-|       3 | A Game of Thrones                         |              1 | 2025-03-16         | Recently Borrowed |
-|       4 | Murder on the Orient Express              |              1 | NULL               | Never Borrowed    |
-|       5 | The Lord of the Rings                     |              1 | NULL               | Never Borrowed    |
-|       6 | To Kill a Mockingbird                     |              1 | NULL               | Never Borrowed    |
-|       7 | The Da Vinci Code                         |              1 | NULL               | Never Borrowed    |
-|       8 | The Handmaid's Tale                       |              1 | NULL               | Never Borrowed    |
-|       9 | American Gods                             |              1 | NULL               | Never Borrowed    |
-|      10 | The Old Man and the Sea                   |              1 | NULL               | Never Borrowed    |
-|      11 | Harry Potter and the Goblet of Fire       |              0 | NULL               | Never Borrowed    |
-|      12 | Harry Potter and the Chamber of Secrets   |              0 | NULL               | Never Borrowed    |
-|      13 | Harry Potter and the Prisoner of Azkaban  |              0 | NULL               | Never Borrowed    |
-|      14 | Harry Potter and the Order of the Phoenix |              0 | NULL               | Never Borrowed    |
-|      15 | Harry Potter and the Half-Blood Prince    |              0 | NULL               | Never Borrowed    |
-|      16 | Harry Potter and the Deathly Hallows      |              0 | NULL               | Never Borrowed    |
-|     101 | Outliers                                  |              1 | 2025-03-23         | Recently Borrowed |
-|     102 | Atomic Habits                             |              1 | 2025-03-24         | Recently Borrowed |
-|     103 | Daring Greatly                            |              0 | 2025-03-25         | Recently Borrowed |
-|     104 | Becoming (Audiobook)                      |              0 | 2025-03-26         | Recently Borrowed |
-|     105 | Homo Deus (eBook)                         |              1 | 2025-03-27         | Recently Borrowed |
-|     151 | National Geographic                       |              1 | 2025-03-28         | Recently Borrowed |
-|     152 | Time                                      |              1 | NULL               | Never Borrowed    |
-|     153 | The Economist                             |              0 | NULL               | Never Borrowed    |
-|     154 | Vogue                                     |              1 | NULL               | Never Borrowed    |
-|     155 | Good Housekeeping                         |              0 | NULL               | Never Borrowed    |
-+---------+-------------------------------------------+----------------+--------------------+-------------------+
+19. Item availability and history
++---------+-------------------------------------------+----------------+---------------------+--------------------+-------------------------------+
+| item_id | title                                     | is_checked_out | copy_ids            | last_borrowed_date | borrow_status                 |
++---------+-------------------------------------------+----------------+---------------------+--------------------+-------------------------------+
+|       1 | Harry Potter and the Philosopher's Stone  | in_stock       | 1,2,3,4,5,12        | 2025-04-25         | Recently Borrowed             |
+|       2 | The Shining                               | in_stock       | 6,7,8               | 2025-04-23         | Recently Borrowed             |
+|       3 | A Game of Thrones                         | checked_out    | 9,10,11             | 2025-04-23         | Recently Borrowed             |
+|       4 | Murder on the Orient Express              | in_stock       | 14                  | NULL               | Never Borrowed                |
+|       5 | The Lord of the Rings                     | in_stock       | 15                  | NULL               | Never Borrowed                |
+|       6 | To Kill a Mockingbird                     | in_stock       | 16                  | NULL               | Never Borrowed                |
+|       7 | The Da Vinci Code                         | in_stock       | 17                  | NULL               | Never Borrowed                |
+|       8 | The Handmaid's Tale                       | in_stock       | 18                  | NULL               | Never Borrowed                |
+|       9 | American Gods                             | in_stock       | 19                  | NULL               | Never Borrowed                |
+|      10 | The Old Man and the Sea                   | in_stock       | 13                  | 2024-09-21         | Not borrowed in past 6 months |
+|      11 | Harry Potter and the Goblet of Fire       | in_stock       | 20                  | NULL               | Never Borrowed                |
+|      12 | Harry Potter and the Chamber of Secrets   | in_stock       | 21                  | NULL               | Never Borrowed                |
+|      13 | Harry Potter and the Prisoner of Azkaban  | in_stock       | 22                  | NULL               | Never Borrowed                |
+|      14 | Harry Potter and the Order of the Phoenix | in_stock       | 23                  | NULL               | Never Borrowed                |
+|      15 | Harry Potter and the Half-Blood Prince    | in_stock       | 24                  | NULL               | Never Borrowed                |
+|      16 | Harry Potter and the Deathly Hallows      | in_stock       | 25                  | NULL               | Never Borrowed                |
+|      17 | The Teacher                               | in_stock       | 26                  | NULL               | Never Borrowed                |
+|      18 | IT                                        | in_stock       | 27                  | NULL               | Never Borrowed                |
+|      19 | Verity                                    | in_stock       | 28                  | NULL               | Never Borrowed                |
+|      20 | The Comfort of Ghosts                     | in_stock       | 29                  | NULL               | Never Borrowed                |
+|     101 | Outliers                                  | checked_out    | 301                 | 2025-03-23         | Recently Borrowed             |
+|     102 | Atomic Habits                             | checked_out    | 302                 | 2025-03-24         | Recently Borrowed             |
+|     103 | Daring Greatly                            | checked_out    | 303                 | 2025-03-25         | Recently Borrowed             |
+|     104 | Becoming (Audiobook)                      | checked_out    | 304                 | 2025-03-26         | Recently Borrowed             |
+|     105 | Homo Deus (eBook)                         | checked_out    | 305                 | 2025-03-27         | Recently Borrowed             |
+|     106 | Project Hail Mary                         | in_stock       | 306                 | NULL               | Never Borrowed                |
+|     107 | Iron Flame                                | in_stock       | 307                 | NULL               | Never Borrowed                |
+|     108 | Atomic Habits                             | in_stock       | 308                 | NULL               | Never Borrowed                |
+|     109 | Happy Place                               | in_stock       | 309                 | NULL               | Never Borrowed                |
+|     110 | Lessons in Chemistry                      | in_stock       | 310                 | NULL               | Never Borrowed                |
+|     111 | Spare (Audiobook)                         | in_stock       | 311                 | NULL               | Never Borrowed                |
+|     112 | The Woman in Me                           | in_stock       | 312                 | NULL               | Never Borrowed                |
+|     113 | The Light We Carry                        | in_stock       | 313                 | NULL               | Never Borrowed                |
+|     114 | I'm Glad My Mom Died                      | in_stock       | 314                 | NULL               | Never Borrowed                |
+|     115 | It Starts with Us                         | in_stock       | 315                 | NULL               | Never Borrowed                |
+|     116 | The Snakehead                             | in_stock       | 316                 | NULL               | Never Borrowed                |
+|     117 | The Wager (Audiobook)                     | in_stock       | 317                 | NULL               | Never Borrowed                |
+|     118 | The Housemaid (eBook)                     | in_stock       | 318                 | NULL               | Never Borrowed                |
+|     119 | Friends, Lovers, and the Big Thing        | in_stock       | 319                 | NULL               | Never Borrowed                |
+|     120 | The Hunter (eBook)                        | in_stock       | 320                 | NULL               | Never Borrowed                |
+|     151 | National Geographic                       | in_stock       | 401,402,403,404,405 | 2025-03-28         | Recently Borrowed             |
+|     152 | Time                                      | in_stock       | 406                 | 2025-03-03         | Recently Borrowed             |
+|     153 | March 10, 2025 Issue                      | in_stock       | 407                 | NULL               | Never Borrowed                |
+|     154 | Vogue                                     | in_stock       | 408                 | NULL               | Never Borrowed                |
+|     155 | Good Housekeeping                         | in_stock       | 409                 | NULL               | Never Borrowed                |
+|     156 | The Economist                             | in_stock       | 410                 | NULL               | Never Borrowed                |
+|     157 | Time                                      | in_stock       | 411                 | NULL               | Never Borrowed                |
+|     158 | The New Yorker                            | in_stock       | 412                 | NULL               | Never Borrowed                |
+|     159 | Scientific American                       | in_stock       | 413                 | NULL               | Never Borrowed                |
+|     160 | Wired                                     | in_stock       | 414                 | NULL               | Never Borrowed                |
+|     161 | MIT Technology Review                     | in_stock       | 415                 | NULL               | Never Borrowed                |
+|     162 | Vogue                                     | in_stock       | 416                 | NULL               | Never Borrowed                |
+|     163 | Esquire                                   | in_stock       | 417                 | NULL               | Never Borrowed                |
+|     164 | National Geographic                       | in_stock       | 418                 | NULL               | Never Borrowed                |
+|     165 | Bloomberg Businessweek                    | in_stock       | 419                 | NULL               | Never Borrowed                |
+|     166 | Forbes                                    | in_stock       | 420                 | NULL               | Never Borrowed                |
+|     167 | Harvard Business Review                   | in_stock       | 421                 | NULL               | Never Borrowed                |
+|     168 | Marvel Comics                             | in_stock       | 422                 | NULL               | Never Borrowed                |
+|     169 | Popular Science                           | in_stock       | 423                 | NULL               | Never Borrowed                |
+|     170 | Men's Health                              | in_stock       | 424                 | NULL               | Never Borrowed                |
++---------+-------------------------------------------+----------------+---------------------+--------------------+-------------------------------+
 
-21. 
+20. Overdue items report
++-----------+-----------------+----------------+------------------------------------------+------------+-----------+------------------+----------+----------+
+| member_id | name            | transaction_id | title                                    | due_date   | days_late | returned_yet     | fee_type | late_fee |
++-----------+-----------------+----------------+------------------------------------------+------------+-----------+------------------+----------+----------+
+|        34 | Thomas Young    |             29 | A Game of Thrones                        | 2024-03-29 |         4 | Returned         |     0.30 |     1.20 |
+|        35 | Elizabeth Scott |             30 | Outliers                                 | 2024-04-03 |         2 | Returned         |     0.20 |     0.40 |
+|         3 | Michael Brown   |             32 | The Shining                              | 2025-03-14 |         3 | Returned         |     0.30 |     0.90 |
+|        11 | Emily Davis     |             33 | National Geographic                      | 2025-03-15 |         3 | Returned         |     0.20 |     0.60 |
+|        31 | Jennifer Adams  |             34 | Time                                     | 2025-03-16 |         3 | Returned         |     0.30 |     0.90 |
+|        21 | Robert Taylor   |             35 | Becoming (Audiobook)                     | 2025-03-17 |         3 | Returned         |     0.15 |     0.45 |
+|         1 | John Smith      |             17 | National Geographic                      | 2025-03-24 |        32 | Not Yet Returned |     0.30 |     9.60 |
+|         2 | Sarah Johnson   |             18 | National Geographic                      | 2025-03-25 |        31 | Not Yet Returned |     0.30 |     9.30 |
+|        31 | Jennifer Adams  |              7 | Harry Potter and the Philosopher's Stone | 2025-04-02 |        23 | Not Yet Returned |     0.30 |     6.90 |
+|        34 | Thomas Young    |              8 | Harry Potter and the Philosopher's Stone | 2025-04-03 |        22 | Not Yet Returned |     0.30 |     6.60 |
+|        13 | Jessica Lee     |             11 | Outliers                                 | 2025-04-06 |        19 | Not Yet Returned |     0.20 |     3.80 |
+|        32 | Daniel Martin   |             12 | Atomic Habits                            | 2025-04-07 |        18 | Not Yet Returned |     0.20 |     3.60 |
+|        35 | Elizabeth Scott |             13 | Daring Greatly                           | 2025-04-08 |        17 | Not Yet Returned |     0.20 |     3.40 |
+|        21 | Robert Taylor   |             14 | Becoming (Audiobook)                     | 2025-04-09 |        16 | Not Yet Returned |     0.15 |     2.40 |
+|        22 | Margaret Clark  |             15 | Homo Deus (eBook)                        | 2025-04-10 |        15 | Not Yet Returned |     0.15 |     2.25 |
+|        23 | Richard White   |             16 | National Geographic                      | 2025-04-11 |        14 | Not Yet Returned |     0.15 |     2.10 |
+|        11 | Emily Davis     |              2 | Harry Potter and the Philosopher's Stone | 2025-04-16 |         9 | Not Yet Returned |     0.20 |     1.80 |
+|        21 | Robert Taylor   |              3 | The Shining                              | 2025-04-17 |         8 | Not Yet Returned |     0.15 |     1.20 |
++-----------+-----------------+----------------+------------------------------------------+------------+-----------+------------------+----------+----------+
+
+21. Revenue summary
 +-----------------+---------------+---------------+
 | membership_type | item_type     | total_revenue |
 +-----------------+---------------+---------------+
-| Regular         | Digital Media |          4.50 |
-| Regular         | Magazine      |          2.50 |
-| Senior_Citizen  | Book          |          1.50 |
-| Student         | Book          |          5.00 |
-| Student         | Digital Media |          3.00 |
+| Regular         | Book          |          2.10 |
+| Regular         | Magazine      |          0.90 |
+| Senior_Citizen  | Digital Media |          0.45 |
+| Student         | Digital Media |          0.40 |
+| Student         | Magazine      |          0.60 |
 +-----------------+---------------+---------------+
+
+==============================================
+Report: Generate a Collection Analysis Report.
+==============================================
+
+Genre Distributions in the Book Items
++-----------------+------------+------------+
+| genre           | book_count | percentage |
++-----------------+------------+------------+
+| Fantasy         |         10 |      50.00 |
+| Thriller        |          3 |      15.00 |
+| Horror          |          2 |      10.00 |
+| Classic         |          2 |      10.00 |
+| Mystery         |          2 |      10.00 |
+| Science Fiction |          1 |       5.00 |
++-----------------+------------+------------+
+
+Trends in Acquisitions
++------------------+-------------+------------------------+
+| publication_year | books_added | acquisition_period     |
++------------------+-------------+------------------------+
+|             2024 |           2 | Recent (Last 20 Years) |
+|             2018 |           1 | Recent (Last 20 Years) |
+|             2007 |           1 | Recent (Last 20 Years) |
+|             2005 |           1 | Recent (Last 20 Years) |
+|             2003 |           2 | Older                  |
+|             2001 |           1 | Older                  |
+|             2000 |           1 | Older                  |
+|             1999 |           1 | Older                  |
+|             1998 |           1 | Older                  |
+|             1997 |           1 | Older                  |
+|             1996 |           1 | Older                  |
+|             1986 |           1 | Older                  |
+|             1985 |           1 | Older                  |
+|             1977 |           1 | Older                  |
+|             1960 |           1 | Older                  |
+|             1954 |           1 | Older                  |
+|             1952 |           1 | Older                  |
+|             1934 |           1 | Older                  |
++------------------+-------------+------------------------+
+
+Assessing the Age of the Collection
++---------------+-----------------+-----------------+
+| avg_age_years | oldest_book_age | newest_book_age |
++---------------+-----------------+-----------------+
+|         33.85 |              91 |               1 |
++---------------+-----------------+-----------------+
+
+Books with low circulation and analyze borrowing patterns
++-------------------------------------------+------------------+-----------------+
+| title                                     | publication_year | genre           |
++-------------------------------------------+------------------+-----------------+
+| Murder on the Orient Express              |             1934 | Mystery         |
+| The Lord of the Rings                     |             1954 | Fantasy         |
+| To Kill a Mockingbird                     |             1960 | Classic         |
+| The Da Vinci Code                         |             2003 | Thriller        |
+| The Handmaid's Tale                       |             1985 | Science Fiction |
+| American Gods                             |             2001 | Fantasy         |
+| Harry Potter and the Goblet of Fire       |             2000 | Fantasy         |
+| Harry Potter and the Chamber of Secrets   |             1998 | Fantasy         |
+| Harry Potter and the Prisoner of Azkaban  |             1999 | Fantasy         |
+| Harry Potter and the Order of the Phoenix |             2003 | Fantasy         |
+| Harry Potter and the Half-Blood Prince    |             2005 | Fantasy         |
+| Harry Potter and the Deathly Hallows      |             2007 | Fantasy         |
+| The Teacher                               |             2024 | Thriller        |
+| IT                                        |             1986 | Horror          |
+| Verity                                    |             2018 | Thriller        |
+| The Comfort of Ghosts                     |             2024 | Mystery         |
++-------------------------------------------+------------------+-----------------+
+
+Borrowing Patterns by Genre
++------------+---------------+-------------------+
+| genre_name | total_borrows | borrow_percentage |
++------------+---------------+-------------------+
+| Fantasy    |             8 |             20.51 |
+| Science    |             4 |             10.26 |
+| Horror     |             3 |              7.69 |
+| Nonfiction |             2 |              5.13 |
+| Self-Help  |             2 |              5.13 |
+| News       |             1 |              2.56 |
+| Classic    |             1 |              2.56 |
+| Biography  |             1 |              2.56 |
++------------+---------------+-------------------+
+
+Most Active Library Members (Most Books Returned)
++-----------+---------------+------------+
+| member_id | name          | books_read |
++-----------+---------------+------------+
+|        12 | David Wilson  |          2 |
+|         3 | Michael Brown |          2 |
+|         2 | Sarah Johnson |          1 |
+|        11 | Emily Davis   |          1 |
++-----------+---------------+------------+
+
+===============================
+ Additional Queries of Our Own.
+===============================
+
+1. Average Time on the Waitlist
++----------------------+
+| avg_fulfillment_days |
++----------------------+
+|                14.40 |
++----------------------+
+
+2. Best Rated Books In Library
++------------------------------------------+----------------+---------------+
+| title                                    | average_rating | total_ratings |
++------------------------------------------+----------------+---------------+
+| Harry Potter and the Philosopher's Stone |           3.50 |             6 |
+| A Game of Thrones                        |           3.00 |             5 |
+| The Shining                              |           3.00 |             1 |
++------------------------------------------+----------------+---------------+
+
+3. Author with the Highest Amount of Books In Library
++--------------+---------------------+
+| author_name  | max_books_by_author |
++--------------+---------------------+
+| J.K. Rowling |                   7 |
++--------------+---------------------+
+
+4. Book Recommendations by Library Members
++-----------+---------------+----------------------+------------------------------------------+--------------------+
+| member_id | member_name   | contact_information  | recommended_book                         | book_author        |
++-----------+---------------+----------------------+------------------------------------------+--------------------+
+|         1 | John Smith    | john.smith@email.com | A Game of Thrones                        | George R.R. Martin |
+|         1 | John Smith    | john.smith@email.com | Harry Potter and the Philosopher's Stone | J.K. Rowling       |
+|         1 | John Smith    | john.smith@email.com | The Lord of the Rings                    | J.R.R. Tolkien     |
+|        21 | Robert Taylor | robert.t@email.com   | The Old Man and the Sea                  | Ernest Hemingway   |
+|        21 | Robert Taylor | robert.t@email.com   | To Kill a Mockingbird                    | Harper Lee         |
++-----------+---------------+----------------------+------------------------------------------+--------------------+
+
+5. Library Members that Have Never Borrowed
++-----------+---------------+---------------------+----------------+----------------+
+| member_id | name          | contact_information | account_status | member_type    |
++-----------+---------------+---------------------+----------------+----------------+
+|        36 | Charles Allen | charles.a@email.com | active         | Senior Citizen |
+|       100 | Sophia Jacob  | sophia@college.edu  | active         | Student        |
+|       101 | Anna Lin      | anna@college.edu    | active         | Student        |
+|       102 | Kusuma Murthy | Kusuma@college.edu  | active         | Student        |
+|       103 | Ella Nyugen   | ella@college.edu    | active         | Student        |
+|       104 | Nimra Syed    | nimra@college.edu   | active         | Student        |
+|       105 | Nikka Vuong   | nikka@college.edu   | active         | Student        |
++-----------+---------------+---------------------+----------------+----------------+
