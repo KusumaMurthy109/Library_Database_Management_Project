@@ -20,9 +20,9 @@ Links:
 - 07 Glossary - **Currently in GitHub**
 # Project Deliverables (SQL Scripts):
 - drop_all_tables.sql - Will drop all tables in DB for a clean slate.
-- ** create_tables_library.sql - Will create all the tables in DB.
-- ** populate_library.sql - Will populate all the tables in the DB.
-- ** test_queries.sql - Will create the outputs for all of our SQL Queries and Reports.
+- **create_tables_library.sql** - Will create all the tables in DB.
+- **populate_library.sql** - Will populate all the tables in the DB.
+- **test_queries.sql** - Will create the outputs for all of our SQL Queries and Reports.
 - table_output.sql - Will print all the data that are in each table.
 # Project Deliverables (CSV Output Files):
 - query_output.csv - All the table output of the queries.
