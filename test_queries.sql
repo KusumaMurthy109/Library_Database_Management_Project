@@ -91,7 +91,7 @@ FROM Library_Member lm
     JOIN Book b ON o.item_id = b.item_id
 WHERE lt.return_date IS NULL
     AND lt.due_date >= CURDATE()
-    AND lt.due_date <= CURDATE() + 7
+    AND lt.due_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)
 ORDER BY lt.due_date ASC;
 -- 8. Members with overdue books ----------------------------------------------------------------------------------
 SELECT lm.member_id,
@@ -472,7 +472,9 @@ GROUP BY membership_type,
     item_type
 ORDER BY membership_type,
     item_type;
--- Report: Generate a Collection Analysis Report. -------------------------------------------------------------------------------------
+/*
+ Report: Generate a Collection Analysis Report.
+ */
 -- Genre Distributions in the Book Items
 SELECT b.genre as genre,
     COUNT(b.item_id) AS book_count,
@@ -514,12 +516,10 @@ FROM Book b
         WHERE o.item_id = b.item_id
             AND c.copy_id = l.copy_id
     )
-    LEFT JOIN Categorize cat ON b.item_id = cat.item_id
-    LEFT JOIN Genre g ON cat.genre_id = g.genre_id
 WHERE l.copy_id IS NULL
 GROUP BY b.item_id;
 -- Borrowing Patterns by Genre
-SELECT g.genre_name,
+SELECT COALESCE(bk.genre, m.genre, dmi.genre) AS genre_name,
     COUNT(DISTINCT l.copy_id) AS total_borrows,
     ROUND(
         COUNT(DISTINCT l.copy_id) * 100.0 / (
@@ -530,9 +530,13 @@ SELECT g.genre_name,
     ) AS borrow_percentage
 FROM Loan l
     JOIN Originate o ON l.copy_id = o.copy_id
-    JOIN Categorize cat ON o.item_id = cat.item_id
-    JOIN Genre g ON cat.genre_id = g.genre_id
-GROUP BY g.genre_name
+    LEFT JOIN Book bk ON bk.item_id = o.item_id
+    LEFT JOIN Magazine m ON m.item_id = o.item_id
+    LEFT JOIN Digital_Media_Item dmi ON dmi.item_id = o.item_id
+WHERE bk.item_id IS NOT NULL
+    OR m.item_id IS NOT NULL
+    OR dmi.item_id IS NOT NULL
+GROUP BY COALESCE(bk.genre, m.genre, dmi.genre)
 ORDER BY total_borrows DESC;
 -- Most Active Library Members (Most Books Returned) -------------------------------------------------------------------------------------
 SELECT lm.member_id,
@@ -554,11 +558,14 @@ GROUP BY lm.member_id,
 ORDER BY books_read DESC -- rank members by most books read
     -- top 10 readers only
 LIMIT 10;
--- Average Time on the Waitlist -------------------------------------------------------------------------------------
+/*
+ Our Own Queries
+ */
+-- 1. Average Time on the Waitlist -------------------------------------------------------------------------------------
 SELECT ROUND(AVG(DATEDIFF(fulfilled_date, request_date)), 2) AS avg_fulfillment_days
 FROM Waitlist
 WHERE waitlist_status = 'available_for_checkout';
--- Best Rated Books In Library -------------------------------------------------------------------------------------
+-- 2. Best Rated Books In Library -------------------------------------------------------------------------------------
 SELECT b.title,
     -- title of the book
     ROUND(AVG(r.stars_given), 2) AS average_rating,
@@ -574,7 +581,7 @@ ORDER BY average_rating DESC,
     total_ratings DESC -- rank by average rating, then number of ratings
     -- show top 10 best-rated books
 LIMIT 10;
--- Author with the Highest Amount of Books In Library -------------------------------------------------------------------------------------
+-- 3. Author with the Highest Amount of Books In Library -------------------------------------------------------------------------------------
 WITH author_and_books AS (
     SELECT author AS author_name,
         COUNT(*) AS book_count
@@ -585,7 +592,7 @@ WITH author_and_books AS (
 SELECT author_name,
     MAX(book_count) AS max_books_by_author
 FROM author_and_books;
--- Book Recommendations by Library Members -------------------------------------------------------------------------------------
+-- 4. Book Recommendations by Library Members -------------------------------------------------------------------------------------
 SELECT m.member_id,
     m.name AS member_name,
     m.contact_information,
@@ -598,3 +605,20 @@ FROM Library_Member m
     JOIN Book b ON co.item_id = b.item_id
 ORDER BY m.member_id,
     b.title;
+-- 5. Library Members that Have Never Borrowed -------------------------------------------------------------------------------------
+SELECT lm.member_id,
+    lm.name,
+    lm.contact_information,
+    lm.account_status,
+    CASE
+        WHEN lm.type_id = 1 THEN 'Regular'
+        WHEN lm.type_id = 2 THEN 'Student'
+        WHEN lm.type_id = 3 THEN 'Senior Citizen'
+    END AS member_type
+FROM Library_Member lm
+WHERE lm.member_id NOT IN (
+        SELECT DISTINCT m.member_id
+        FROM Make m
+            JOIN Loan l ON m.transaction_id = l.transaction_id
+    )
+ORDER BY lm.member_id;

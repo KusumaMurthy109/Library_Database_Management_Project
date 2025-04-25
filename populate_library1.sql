@@ -195,7 +195,7 @@ INSERT INTO Library_Transaction (
         due_date,
         return_date
     )
-VALUES (1, '2025-04-10', '2025-04-24', NULL),
+VALUES (1, '2025-04-25', '2025-05-02', NULL),
     -- CHANGE UP THE RETURN DATE SO ITS NOT ALWAYS 13
     (2, '2025-04-02', '2025-04-16', NULL),
     (3, '2025-04-03', '2025-04-17', NULL),
@@ -1110,6 +1110,60 @@ VALUES -- Regular members (type_id=1)
         2,
         'Elizabeth Scott',
         'elizabeth.s@college.edu',
+        'active'
+    ),
+    (
+        100,
+        10,
+        0.20,
+        2,
+        'Sophia Jacob',
+        'sophia@college.edu',
+        'active'
+    ),
+    (
+        101,
+        10,
+        0.20,
+        2,
+        'Anna Lin',
+        'anna@college.edu',
+        'active'
+    ),
+    (
+        102,
+        10,
+        0.20,
+        2,
+        'Kusuma Murthy',
+        'Kusuma@college.edu',
+        'active'
+    ),
+    (
+        103,
+        10,
+        0.20,
+        2,
+        'Ella Nyugen',
+        'ella@college.edu',
+        'active'
+    ),
+    (
+        104,
+        10,
+        0.20,
+        2,
+        'Nimra Syed',
+        'nimra@college.edu',
+        'active'
+    ),
+    (
+        105,
+        10,
+        0.20,
+        2,
+        'Nikka Vuong',
+        'nikka@college.edu',
         'active'
     ),
     -- Senior citizens (type_id=3)
