@@ -1,6 +1,6 @@
 -- Shows the all the relations present in the database
 SHOW TABLES;
---Print the attributes and tuples for each of the tables present in the database
+-- Print the attributes and tuples for each of the tables present in the database
 SELECT *
 FROM Author;
 SELECT *
