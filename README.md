@@ -1,6 +1,7 @@
 # Library_Database_Management_Project
 Library_Database_Management_Project
-
+As a Software as a Service (SaaS) company, ASKNrEceive (ASKNE) hopes to help streamline database creation and management. The purpose of this project is to provide local libraries with a Library Management System (LMS) that ensures efficiency for both types of end-users: library staff and library customers. This abstracted database will facilitate better documentation of the books, magazines, and other available items for ease of management and organization.
+Through this project, ASKNE will develop a fully functional and scalable database software for libraries to handle, maintain, and analyze the popularity of their collections through detailed reports. Using a streamlined approach, the goal is to design a robust relational database with a well-defined conceptual schema and physical implementation.
 
 **Note:** Please visit our Wiki Page at the top to see our Meeting Logs and our Team Member Profiles.
 
