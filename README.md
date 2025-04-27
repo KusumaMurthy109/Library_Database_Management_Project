@@ -15,8 +15,8 @@ Links:
   - [ER Model Diagram Link](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=ER%20Diagram&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1_KGkKMW-fyRr9aN6N-gbbnwTqDtz724K%26export%3Ddownload#%7B%22pageId%22%3A%22k7eG-Vjl01qzv2KogiVF%22%7D)
 - 04 Logical Relational Model - **Currently in GitHub along with Logical Relational Model Diagram PDF**
   - [Logical Relational Model Diagram Link](https://viewer.diagrams.net/?tags=%7B%7D&lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=Relational%20Schema%20Diagram&dark=0#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D1HizW8P6hBaWhd9nTs-7Okx-FbY9aNjA3%26export%3Ddownload#%7B%22pageId%22%3A%22k7eG-Vjl01qzv2KogiVF%22%7D)
-- 05 Physical Design Database
-- 06 Project Demonstration
+- 05 Physical Design Database - **Currently in GitHub**
+- 06 Project Demonstration - **Scheduled on April 29th at 2:30 PM with GTA Moh Absar**
 - 07 Glossary - **Currently in GitHub**
 # Project Deliverables (SQL Scripts):
 - drop_all_tables.sql - Will drop all tables in DB for a clean slate.
